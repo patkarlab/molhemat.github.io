@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="description" content="Publications from the Molecular Hematology Research Group at ACTREC, Tata Memorial Centre, Mumbai, India." />
+  <title>Publications – Molecular Hematology Research Group</title>
+  <style>
+    :root{
+      --ink:#0a1e78;
+      --mut:#D80000;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body { 
+      margin:0; 
+      padding:0; 
+      background:#ffffff; 
+    }
+    
+    body { 
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; 
+      color: var(--ink);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Navigation bar */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.85);
+      padding: 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(10,30,120,0.08);
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a:hover {
+      background: rgba(10,30,120,0.08);
+    }
+
+    .nav a.active {
+      background: var(--ink);
+      color: white;
+    }
+
+    /* Canvas positioning */
+    #nucleotideCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* Main content container */
+    .container {
+      position: relative;
+      z-index: 10;
+      padding: 120px 20px 80px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Section styling */
+    .section {
+      margin-bottom: 80px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      margin: 0 0 40px 0;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .mut { color: var(--mut); }
+
+    /* Grid layout for publications */
+    .pub-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Individual publication card */
+    .pub-card {
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(10,30,120,0.07);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pub-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(10,30,120,0.12);
+    }
+
+    .pub-link {
+      text-decoration: none;
+      color: inherit;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pub-image {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(10,30,120,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .pub-card:hover .pub-image {
+      box-shadow: 0 4px 16px rgba(10,30,120,0.15);
+    }
+
+    .pub-caption {
+      margin-top: 16px;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.5;
+      color: var(--ink);
+      opacity: 0.85;
+    }
+
+    /* Footer */
+    .footer{ 
+      position: fixed; 
+      left: 0; 
+      right: 0; 
+      bottom: 12px; 
+      text-align: center; 
+      font-size: 11px; 
+      opacity: .6; 
+      z-index: 10;
+      padding: 0 20px;
+      pointer-events: none;
+    }
+
+    /* Mobile-specific adjustments */
+    @media (max-width: 768px) {
+      .nav {
+        top: 12px;
+        padding: 6px;
+        gap: 4px;
+      }
+
+      .nav a {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+      
+      .container {
+        padding: 88px 16px 60px;
+      }
+
+      .section {
+        margin-bottom: 60px;
+      }
+      
+      .section-title {
+        font-size: clamp(28px, 6vw, 36px);
+        margin-bottom: 32px;
+      }
+
+      .pub-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+      }
+      
+      .footer {
+        font-size: 10px;
+        bottom: 8px;
+      }
+
+      #nucleotideCanvas {
+        opacity: 0.45;
+      }
+    }
+
+    /* Very small devices */
+    @media (max-width: 380px) {
+      .nav {
+        gap: 2px;
+        padding: 4px;
+      }
+
+      .nav a {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+
+      .pub-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+    }
+
+    /* Large screens */
+    @media (min-width: 1200px) {
+      .section-title {
+        font-size: 52px;
+      }
+
+      .nav a {
+        font-size: 16px;
+        padding: 12px 24px;
+      }
+
+      .pub-grid {
+        gap: 32px;
+      }
+    }
+
+    /* Landscape mobile adjustments */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .nav {
+        top: 8px;
+      }
+
+      .nav a {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      .container {
+        padding-top: 70px;
+      }
+      
+      .section-title {
+        font-size: 32px;
+        margin-bottom: 24px;
+      }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) { 
+      #nucleotideCanvas { display: none; }
+      .pub-card { transition: none; }
+      .pub-image { transition: none; }
+    }
+
+    /* Reduce animation complexity on mobile */
+    @media (max-width: 768px) and (pointer: coarse) {
+      #nucleotideCanvas {
+        opacity: 0.45;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="team.html">Team</a>
+    <a href="research.html">Research</a>
+    <a href="publications.html" class="active">Publications</a>
+    <a href="gene_coordinate_extractor.html">Tools</a>
+    <a href="social.html">Social</a>
+  </nav>
+
+  <!-- Animated nucleotide rain canvas (background) -->
+  <canvas id="nucleotideCanvas" aria-hidden="true"></canvas>
+
+  <!-- Main content -->
+  <main class="container" role="main">
+    <!-- Highlighted Publications Section -->
+    <section class="section">
+      <h2 class="section-title"><span class="mut">Highlighted</span> Publications</h2>
+      <div class="pub-grid">
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2026 Mawalankar et al JCO GO.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2026 Mawalankar et al JCO GO.png" alt="2026 Mawalankar et al JCO GO" class="pub-image">
+            <p class="pub-caption">Mawalankar et al., JCO Global Oncology (2026)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2021 Patkar et al Leukemia.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2021 Patkar et al Leukemia.jpg" alt="2021 Patkar et al Leukemia" class="pub-image">
+            <p class="pub-caption">Patkar et al., Leukemia (2021)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2020 Shaikh et al Leuk Lymphoma.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2020 Shaikh et al Leuk Lymphoma.jpg" alt="2020 Shaikh et al Leuk Lymphoma" class="pub-image">
+            <p class="pub-caption">Shaikh et al., Leukemia & Lymphoma (2020)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2020 Patkar et al BCJ Narasimha.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2020 Patkar et al BCJ Narasimha.jpg" alt="2020 Patkar et al BCJ Narasimha" class="pub-image">
+            <p class="pub-caption">Patkar et al., Blood Cancer Journal (2020)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2019 Patkar et al BCJ NPM1.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2019 Patkar et al BCJ NPM1.jpg" alt="2019 Patkar et al BCJ NPM1" class="pub-image">
+            <p class="pub-caption">Patkar et al., Blood Cancer Journal (2019)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2018 Patkar et al Oncotarget.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2018 Patkar et al Oncotarget.jpg" alt="2018 Patkar et al Oncotarget" class="pub-image">
+            <p class="pub-caption">Patkar et al., Oncotarget (2018)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/highlighted_papers/2018 Patkar et al Frontiers.pdf" class="pub-link" target="_blank">
+            <img src="photos/highlighted_papers/2018 Patkar et al Frontiers.jpg" alt="2018 Patkar et al Frontiers" class="pub-image">
+            <p class="pub-caption">Patkar et al., Frontiers (2018)</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Consensus Documents / Invited Reviews Section -->
+    <section class="section">
+      <h2 class="section-title"><span class="mut">Consensus Documents</span> / Invited Reviews</h2>
+      <div class="pub-grid">
+        <div class="pub-card">
+          <a href="photos/invited_reviews/2025 Review JCP.pdf" class="pub-link" target="_blank">
+            <img src="photos/invited_reviews/2025 Review JCP.jpg" alt="2025 Review JCP" class="pub-image">
+            <p class="pub-caption">JCP Review (2025)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/invited_reviews/2024 Review Histopathology.pdf" class="pub-link" target="_blank">
+            <img src="photos/invited_reviews/2024 Review Histopathology.jpg" alt="2024 Review Histopathology" class="pub-image">
+            <p class="pub-caption">Histopathology Review (2024)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/invited_reviews/2023 Review IJMPO.pdf" class="pub-link" target="_blank">
+            <img src="photos/invited_reviews/2023 Review IJMPO.jpg" alt="2023 Review IJMPO" class="pub-image">
+            <p class="pub-caption">IJMPO Review (2023)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/invited_reviews/2022 Review WHO Leukemia.pdf" class="pub-link" target="_blank">
+            <img src="photos/invited_reviews/2022 Review WHO Leukemia.jpg" alt="2022 Review WHO Leukemia" class="pub-image">
+            <p class="pub-caption">Leukemia WHO Classification Review (2022)</p>
+          </a>
+        </div>
+
+        <div class="pub-card">
+          <a href="photos/invited_reviews/2023 Commentary BJH.pdf" class="pub-link" target="_blank">
+            <img src="photos/invited_reviews/2023 Commentary BJH.png" alt="2023 Commentary BJH" class="pub-image">
+            <p class="pub-caption">Commentary, BJH (2023)</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">© <span id="year"></span> Molecular Hematology Research Group · ACTREC · TMC</footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Detect if mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isSmallScreen = window.innerWidth <= 768;
+    
+    const canvas = document.getElementById("nucleotideCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Adjust animation parameters for mobile
+    const SPEED_FACTOR = isMobile ? 0.25 : 0.45;
+    const LIFETIME_MS  = isMobile ? 2200 : 2800;
+    const MUT_RATE     = 0.03;
+    const COL_WIDTH    = isMobile ? 44 : 32;
+    const ROW_SCALE_MIN = 1.3;
+    const ROW_SCALE_MAX = 1.7;
+
+    // HiDPI crispness with performance consideration
+    function resizeCanvas() {
+      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : (window.devicePixelRatio || 1);
+      canvas.style.position = "fixed";
+      canvas.style.top = 0; 
+      canvas.style.left = 0; 
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeCanvas();
+
+    const bases = ["A","T","G","C"];
+    let columns = [];
+    let animationId = null;
+
+    function rand(a,b){ return a + Math.random()*(b-a); }
+
+    function newColumn(i) {
+      const fontSize = isMobile ? (14 + Math.random() * 20) : (18 + Math.random() * 28);
+      const rowScale = rand(ROW_SCALE_MIN, ROW_SCALE_MAX);
+      return {
+        x: i * COL_WIDTH + Math.floor(COL_WIDTH * 0.5),
+        y: Math.random() * window.innerHeight,
+        speed: (0.8 + Math.random() * 1.2) * SPEED_FACTOR,
+        fontSize,
+        rowStep: fontSize * rowScale,
+        depth: 0.6 + Math.random() * 0.8,
+        lastEmitY: 0,
+        trail: []
+      };
+    }
+
+    function rebuildColumns() {
+      const count = Math.max(1, Math.floor(window.innerWidth / COL_WIDTH));
+      const maxCols = isMobile ? 12 : 36;
+      const finalCount = Math.min(count, maxCols);
+      
+      columns = new Array(finalCount).fill(0).map((_, i) => {
+        const c = newColumn(i);
+        c.lastEmitY = c.y;
+        return c;
+      });
+    }
+    rebuildColumns();
+
+    const easeOutQuad = t => 1 - (1 - t) * (1 - t);
+
+    // Throttle animation on mobile
+    let lastFrame = 0;
+    const targetFPS = isMobile ? 30 : 60;
+    const frameDelay = 1000 / targetFPS;
+
+    function draw(now) {
+      // FPS throttling for mobile
+      if (isMobile && (now - lastFrame) < frameDelay) {
+        animationId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
+
+      // Clear with white background
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      columns.forEach((col, idx) => {
+        // Move the head
+        col.y += col.speed * col.depth;
+
+        // Emit new characters
+        while (col.y - col.lastEmitY >= col.rowStep) {
+          col.lastEmitY += col.rowStep;
+
+          const char = bases[(Math.random() * bases.length) | 0];
+          const isMut = Math.random() < MUT_RATE;
+
+          col.trail.push({
+            x: col.x,
+            y: col.lastEmitY,
+            char,
+            color: isMut ? "#D80000" : "rgb(10,30,120)",
+            size: col.fontSize,
+            born: now
+          });
+        }
+
+        // Recycle column
+        if (col.y > window.innerHeight + col.rowStep) {
+          const next = newColumn(idx);
+          next.y = 0;
+          next.lastEmitY = -next.rowStep;
+          columns[idx] = next;
+        }
+
+        // Render & prune trail
+        const alive = [];
+        const maxTrailLength = isMobile ? 8 : 14;
+        
+        for (let i = 0; i < Math.min(col.trail.length, maxTrailLength); i++) {
+          const g = col.trail[i];
+          const age = now - g.born;
+          if (age <= LIFETIME_MS) {
+            const t = age / LIFETIME_MS;
+            const alpha = (1 - easeOutQuad(t)) * 0.8;
+
+            ctx.globalAlpha = alpha;
+            
+            if (!isMobile) {
+              ctx.shadowColor = g.color;
+              ctx.shadowBlur = Math.max(0, (g.size - 18) * 0.15);
+            }
+
+            ctx.font = `${g.size}px monospace`;
+            ctx.fillStyle = g.color;
+            ctx.fillText(g.char, g.x, g.y);
+
+            alive.push(g);
+          }
+        }
+        col.trail = alive;
+      });
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      animationId = requestAnimationFrame(draw);
+    }
+    
+    // Start animation
+    animationId = requestAnimationFrame(draw);
+
+    // Debounced resize handler
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        resizeCanvas();
+        rebuildColumns();
+      }, 250);
+    });
+
+    // Pause animation when page is not visible (saves battery on mobile)
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      } else if (!document.hidden && !animationId) {
+        animationId = requestAnimationFrame(draw);
+      }
+    });
+
+    // Respect reduced motion
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function handleMotionPreference() {
+      if (mediaQuery.matches) {
+        if (animationId) {
+          cancelAnimationFrame(animationId);
+          animationId = null;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else if (!animationId) {
+        animationId = requestAnimationFrame(draw);
+      }
+    }
+    mediaQuery.addEventListener?.('change', handleMotionPreference);
+    handleMotionPreference();
+  </script>
+</body>
+</html>
