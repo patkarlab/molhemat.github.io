@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Research — Molecular Hematology Research Group</title>
+  <style>
+    :root{
+      --ink: rgb(10,30,120);
+      --mut: #D80000;
+      --panel-bg: rgba(255,255,255,0.86);
+    }
+    html, body { margin:0; padding:0; height:100%; }
+    #nucleotideCanvas{ position:fixed; inset:0; z-index:0; display:block; pointer-events:none; }
+    body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color: var(--ink); background:#fff; }
+
+    /* Navigation bar */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.85);
+      padding: 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(10,30,120,0.08);
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a:hover {
+      background: rgba(10,30,120,0.08);
+    }
+
+    .nav a.active {
+      background: var(--ink);
+      color: white;
+    }
+
+    .wrap{ position:relative; z-index:1; min-height:100vh; padding: 110px 20px 56px; display:grid; place-items:center; }
+    /* NARROWER TEXT BOX */
+    .content{ 
+      background: var(--panel-bg); 
+      -webkit-backdrop-filter: blur(2px); 
+      backdrop-filter: blur(2px); 
+      border-radius: 20px; 
+      /* narrower than before: from min(1000px, 92vw) to min(760px, 90vw) */
+      width: min(760px, 90vw); 
+      padding: clamp(18px,4.5vw,42px); 
+      box-shadow: 0 12px 30px rgba(10,30,120,.10); 
+    }
+    /* HEADERS */
+    h1{ margin: 0 0 16px; font-size: clamp(28px,5.2vw,54px); color: var(--mut); } /* Research header in red */
+    h2{ margin: 28px 0 12px; font-size: clamp(20px,3.2vw,30px); color: var(--ink); }
+    h2.funding-header{ font-size: clamp(16px,2.4vw,22px); color: var(--mut); } /* Smaller red funding header */
+    /* Numbered research areas in red with more spacing above */
+    h3{ 
+      margin: clamp(28px,6vw,40px) 0 10px; /* increased top margin -> more separation */
+      font-size: clamp(18px,2.8vw,24px); 
+      color: var(--mut);
+      line-height: 1.25;
+    }
+    p, li{ font-size: clamp(15px,2.1vw,19px); line-height: 1.7; margin: 10px 0; }
+    ul{ padding-left: 1.2em; }
+    .refs li{ margin-bottom: 8px; font-size: clamp(12px,1.6vw,16px); }
+    .funding li{ margin-bottom: 6px; font-size: clamp(13px,1.8vw,16px); } /* Smaller font for funding */
+    /* a bit of extra space after each refs list to separate sections */
+    .refs{ margin-bottom: clamp(16px,4vw,24px); }
+
+    /* PHONE TUNING: dynamic readjustment */
+    @media (max-width: 768px){
+      .wrap{ padding: 100px 14px 48px; }
+      .content{ width: min(92vw, 700px); padding: clamp(16px,5vw,36px); }
+      .nav {
+        top: 12px;
+        padding: 6px;
+        gap: 4px;
+      }
+      .nav a {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+    }
+    @media (max-width: 420px){
+      .wrap{ padding: 96px 10px 44px; }
+      .content{ width: 94vw; padding: 16px 14px; border-radius: 16px; }
+      h1{ font-size: clamp(26px, 7vw, 34px); }
+      h3{ margin-top: clamp(26px, 8vw, 38px); }
+      #nucleotideCanvas{ opacity: .5; } /* slightly stronger scrim via lower bg dominance */
+      .nav {
+        gap: 2px;
+        padding: 4px;
+      }
+      .nav a {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="nucleotideCanvas"></canvas>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="team.html">Team</a>
+    <a href="research.html" class="active">Research</a>
+    <a href="publications.html">Publications</a>
+    <a href="tools.html">Tools</a>
+    <a href="social.html">Social</a>
+  </nav>
+
+  <main class="wrap" id="top">
+    <article class="content" id="textBlock">
+      <h1>Research</h1>
+      <p>The mission of the group is to improve the diagnosis, prognostication and monitoring of blood cancers. Almost all of our work uses cutting edge next-generation sequencing and computational methods for genomics. We are also developing machine learning and deep learning approaches to further our mission.</p>
+      <p>We actively collaborate with adult and pediatric hematolymphoid disease management groups and the bone marrow transplantation team at the Tata Memorial Centre and ACTREC.</p>
+      <p>We also collaborate with leading public cancer hospitals in India for multicenter studies and are also involved in international collaborations</p>
+
+      <h2>Our Research Areas</h2>
+
+      <h3>1. Measurable Residual Disease Detection for Acute Myeloid Leukemia</h3>
+      <p>Our group has led pioneering clinical work comparing multiparameter flow cytometry and error-corrected panel-based next-generation sequencing for the detection of MRD in acute myeloid leukemia. We are exploring ways to improve MRD detection in AML. This includes development of high efficiency duplex sequencing. It also includes combined protein and DNA based single-cell genomics to study chemotherapy resistance and clonal evolution in AML.</p>
+      <ul class="refs">
+        <li>Nikhil Patkar*, Chinmayee Kakirde, Anam Fatima Shaikh et al. <em>Clinical Impact of Panel Based Error Corrected Next Generation Sequencing versus Flow Cytometry to Detect Measurable Residual Disease (MRD) in Acute Myeloid Leukemia (AML)</em>. <strong>Leukemia</strong>, 2021.</li>
+        <li>Nikhil Patkar*, Rohan Kodgule, Chinmayee Kakirde, et al. <em>Clinical impact of measurable residual disease monitoring by ultradeep next generation sequencing in NPM1 mutated acute myeloid leukemia</em>. <strong>Oncotarget</strong>, 2018;9(93):36613-36624.</li>
+        <li>Nikhil Patkar*, Chinmayee Kakirde, Prasanna Bhanshe, et al. <em>Utility of Immunophenotypic MRD in AML– Real-World Context</em>. <strong>Frontiers in Oncology</strong>, 2019;9:450.</li>
+        <li>Nikhil Patkar et al. <em>Molecular Measurable Residual Disease Detection in Acute Myeloid Leukemia Using Error Corrected Next Generation Sequencing</em>. Platform Presentation, <strong>ASH 2020</strong>.</li>
+      </ul>
+
+      <h3>2. Development of Novel Next-Generation Sequencing Methods for Genomics of Blood Cancers</h3>
+      <p>We develop NGS-based molecular methods for diagnosis, prognostication and monitoring of blood cancers. We are developing adaptive whole genome sequencing as well as third generation whole genome sequencing assays for blood cancers. Adaptive nanopore whole-genome sequencing will enable rapid and comprehensive leukemia diagnosis. To make some of our technologies accessible, we are standardizing targeted nanopore RNA-sequencing workflows for public hospitals across India, aiming to deliver affordable, high-quality molecular diagnostics nationwide.
+Our efforts also extend to developing ultra-sensitive minimal residual disease (MRD) assays for real-time monitoring of treatment response in children with B-cell precursor acute lymphoblastic leukemia (BCP-ALL).</p>
+      <ul class="refs">
+        <li>Nikhil Patkar*, Prasanna Bhanshe, Sweta Rajpal, et al. <em>NARASIMHA: Novel Assay based on Targeted RNA Sequencing to Identify ChiMeric Gene Fusions in Hematological Malignancies</em>. <strong>Blood Cancer Journal</strong>, 2020.</li>
+        <li>Nikhil Patkar (Inventor) <em>A method and a kit for generating nucleic acid for target capture </em>. <strong>PCT Patent Filed </strong>, 2025.</li>
+        <li>Nikhil Patkar (Inventor) <em>Method For Sequencing Pre-Selected Genomic Regions By Asymmetrically Looped Strand-Biased Oligonucleotides And Hemi-Nested Pcr</em>. <strong>Indian Patent Filed </strong>, 2023.</li>
+
+      </ul>
+
+      <h3>3. Artificial Intelligence and its Application to Blood Cancers</h3>
+      <p>We are developing machine learning and deep learning approaches to transform leukemia diagnostics: This includes the development and validation of methylation-based classifiers for ultrarapid diagnosis of leukemia and prediction of biological subclasses. It also involves development of image-based classification using whole-slide imaging, and development of neural networks for drug response prediction in AML.</p>
+      <ul class="refs">
+        <li>Nikhil Patkar*, Anam Fatima Shaikh, Chinmayee Kakirde, et al. <em>A Novel Machine Learning Derived Genetic Score Correlates with Measurable Residual Disease and is Highly Predictive of Outcome in Acute Myeloid Leukemia with Mutated NPM1</em>. <strong>Blood Cancer Journal</strong>, 2019;9(10):79.</li>
+        <li>Shaikh AF, Kakirde C, …, Patkar N*. <em>Machine learning derived genomics driven prognostication for acute myeloid leukemia with RUNX1-RUNX1T1</em>. <strong>Leukemia & Lymphoma</strong>, 2020.</li>
+      </ul>
+
+      <h3>4. Genomics of Acute Leukemia and its Germline Predisposition</h3>
+      <p>We are mapping the molecular landscape of childhood leukemia through large-scale whole-transcriptome sequencing to identify key driver events and develop transcriptomic classifiers for precise disease subtyping. We are also investigating the true incidence of germline predisposition to AML in a cohort of pediatric and adult AML. We are also developing functional validation assays for some variants. </p>
+
+      <h3>5. Understanding the Molecular Mechanism of Lymphomagenesis and Genomic Characterization/Monitoring of DLBCL from Tissue and Peripheral Blood</h3>
+      <p>We are developing molecular approaches for comprehensive genomic characterization of lymphomas. This includes developing combined genomic/epigenomic sequencing methods on cell-free DNA. Our goal is to translate such approaches in developing novel, routinely implementable, cost-effective ctDNA tracking methods in lymphoma.</p>
+
+      <h3>6. Understanding Clonal/Cellular Heterogeneity in Acute Leukemia of Ambiguous Lineage (ALAL)</h3>
+      <p>We are exploring the role of single-cell multiomic approaches in patients with ALAL in characterizing heterogeneity and establishing a biology-driven rationale for therapeutic modifications.</p>
+
+      <p style="margin-top: 32px; font-style: italic;">A complete &amp; updated list of our papers can be seen on <a href="https://pubmed.ncbi.nlm.nih.gov/?term=Patkar+Nikhil&sort=date" target="_blank" style="color: var(--mut); text-decoration: underline;">PubMed</a>.</p>
+
+      <h2 class="funding-header">Research Funding</h2>
+      <ul class="funding">
+        <li>ICMR – Center for Advanced Research Grant (2025–2030): Centre for Advanced Research on Innovation in Diagnosis, Prognostication, and Monitoring of Acute Myeloid Leukemia</li>
+        <li>ICMR – Intermediate Grant (2025–2029): Rapid and Affordable DIagnostics for stratifying Childhood Acute Lymphoblastic leukemia (RADICAL)</li>
+        <li>Illumina Inc Medical Research Grant (2023–2026)</li>
+        <li>St Jude Global Alliance (2024–2026)</li>
+        <li>ThermoFisher Scientific – Oncomine Global Grant (2024–2026)</li>
+        <li>Wellcome Trust/DBT India Alliance Senior Fellowship (2023–2028)</li>
+        <li><em>Completed:</em> India Cancer Research Consortium – ICMR (2020–2023)</li>
+        <li><em>Completed:</em> Lady Tata Memorial Trust (2021–2024)</li>
+        <li><em>Completed:</em> Wellcome Trust/DBT India Alliance Intermediate Fellowship (2015–2021)</li>
+      </ul>
+    </article>
+  </main>
+
+  <script>
+  const canvas = document.getElementById('nucleotideCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Controls (calmer vs landing)
+  const SPEED_FACTOR = 0.45;
+  const LIFETIME_MS  = 2800;
+  const MUT_RATE     = 0.03;
+  const COL_WIDTH    = 26;
+  const ROW_SCALE_MIN = 1.25;
+  const ROW_SCALE_MAX = 1.6;
+
+  function resizeCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resizeCanvas();
+
+  const bases = ['A','T','G','C'];
+  let columns = [];
+  let safeRect = null;
+
+  function updateSafeRect(){
+    const el = document.getElementById('textBlock');
+    if(!el){ safeRect = null; return; }
+    const r = el.getBoundingClientRect();
+    const pad = 12;
+    safeRect = { left:r.left - pad, right:r.right + pad, top:r.top - pad, bottom:r.bottom + pad };
+  }
+  updateSafeRect();
+
+  function inSafeRect(x,y){
+    if(!safeRect) return false;
+    return x>=safeRect.left && x<=safeRect.right && y>=safeRect.top && y<=safeRect.bottom;
+  }
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  function newColumn(i){
+    const fontSize = 16 + Math.random()*24;
+    const rowScale = rand(ROW_SCALE_MIN, ROW_SCALE_MAX);
+    return { x: i*COL_WIDTH + Math.floor(COL_WIDTH*0.5), y: Math.random()*window.innerHeight, speed:(0.9+Math.random()*1.4)*SPEED_FACTOR, fontSize, rowStep: fontSize*rowScale, depth:0.7+Math.random()*1.1, lastEmitY:0, trail:[] };
+  }
+
+  function rebuildColumns(){
+    const count = Math.max(1, Math.floor(window.innerWidth / COL_WIDTH));
+    columns = new Array(count).fill(0).map((_,i)=>{ const c=newColumn(i); c.lastEmitY=c.y; return c; });
+  }
+  rebuildColumns();
+
+  const easeOutQuad = t => 1 - (1 - t) * (1 - t);
+
+  function draw(now){
+    ctx.globalAlpha = 1; ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,window.innerWidth,window.innerHeight);
+
+    columns.forEach((col,idx)=>{
+      col.y += col.speed * col.depth;
+      while(col.y - col.lastEmitY >= col.rowStep){
+        col.lastEmitY += col.rowStep;
+        const char = bases[(Math.random()*bases.length) | 0];
+        const isMut = Math.random() < MUT_RATE;
+        col.trail.push({ x:col.x, y:col.lastEmitY, char, color: isMut ? '#D80000' : 'rgb(10,30,120)', size: col.fontSize, born: now });
+      }
+      if(col.y > window.innerHeight + col.rowStep){
+        const next = newColumn(idx); next.y = 0; next.lastEmitY = -next.rowStep; columns[idx] = next; }
+
+      const alive = [];
+      for(let i=0;i<col.trail.length;i++){
+        const g = col.trail[i];
+        const age = now - g.born;
+        if(age <= LIFETIME_MS){
+          const t = age / LIFETIME_MS; const alpha = 1 - (1 - t) * (1 - t);
+          if(!inSafeRect(g.x,g.y)){
+            ctx.globalAlpha = alpha; ctx.shadowColor = g.color; ctx.shadowBlur = Math.max(0,(g.size-16)*0.2);
+            ctx.font = `${g.size}px monospace`; ctx.fillStyle = g.color; ctx.fillText(g.char,g.x,g.y);
+          }
+          alive.push(g);
+        }
+      }
+      col.trail = alive;
+    });
+
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0; requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  window.addEventListener('resize', ()=>{ resizeCanvas(); rebuildColumns(); updateSafeRect(); });
+  window.addEventListener('load', updateSafeRect);
+  </script>
+</body>
+</html>

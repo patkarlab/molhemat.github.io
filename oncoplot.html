@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="description" content="Mutation Waterfall Plot Generator – Generate publication-ready oncoplots from the Molecular Hematology Research Group at ACTREC, Tata Memorial Centre." />
+  <title>Mutation Waterfall Plot Generator – Molecular Hematology Research Group</title>
+  <style>
+    :root{
+      --ink:#0a1e78;
+      --mut:#D80000;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:#ffffff; height: 100%; }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--ink);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Navigation bar */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.85);
+      padding: 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(10,30,120,0.08);
+    }
+    .nav a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .nav a:hover { background: rgba(10,30,120,0.08); }
+    .nav a.active { background: var(--ink); color: white; }
+
+    /* Canvas */
+    #nucleotideCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.2;
+    }
+
+    /* Main content */
+    .container {
+      position: relative;
+      z-index: 10;
+      padding: 88px 20px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Header bar */
+    .tool-bar {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 16px;
+      padding: 16px 24px;
+      box-shadow: 0 4px 16px rgba(10,30,120,0.07);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tool-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tool-bar h1 {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .tool-bar h1 .mut { color: var(--mut); }
+
+    .tool-bar .back-link {
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(10,30,120,0.2);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .tool-bar .back-link:hover {
+      border-color: var(--ink);
+      background: rgba(10,30,120,0.04);
+    }
+
+    .tool-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tool-bar .ext-link {
+      text-decoration: none;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: var(--ink);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .tool-bar .ext-link:hover {
+      background: #0d2690;
+      box-shadow: 0 4px 12px rgba(10,30,120,0.2);
+    }
+
+    .credit {
+      font-size: 12px;
+      color: rgba(10,30,120,0.5);
+    }
+
+    /* iframe container */
+    .iframe-wrap {
+      flex: 1;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(10,30,120,0.07);
+      min-height: 700px;
+    }
+
+    .iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 700px;
+      border: none;
+      display: block;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav { top: 12px; padding: 6px; gap: 4px; }
+      .nav a { padding: 8px 14px; font-size: 13px; }
+      .container { padding: 80px 12px 12px; }
+      .tool-bar { padding: 12px 16px; border-radius: 12px; }
+      .tool-bar h1 { font-size: 18px; }
+      .iframe-wrap { border-radius: 12px; min-height: 600px; }
+      .iframe-wrap iframe { min-height: 600px; }
+      #nucleotideCanvas { opacity: 0.15; }
+      .credit { display: none; }
+    }
+
+    @media (max-width: 380px) {
+      .nav { gap: 2px; padding: 4px; }
+      .nav a { padding: 6px 10px; font-size: 12px; }
+    }
+
+    @media (min-width: 1200px) {
+      .nav a { font-size: 16px; padding: 12px 24px; }
+      .iframe-wrap { min-height: 850px; }
+      .iframe-wrap iframe { min-height: 850px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #nucleotideCanvas { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="team.html">Team</a>
+    <a href="research.html">Research</a>
+    <a href="publications.html">Publications</a>
+    <a href="tools.html" class="active">Tools</a>
+    <a href="social.html">Social</a>
+  </nav>
+
+  <!-- Subtle nucleotide rain (lower opacity since iframe dominates) -->
+  <canvas id="nucleotideCanvas" aria-hidden="true"></canvas>
+
+  <!-- Main content -->
+  <main class="container" role="main">
+    <div class="tool-bar">
+      <div class="tool-bar-left">
+        <a href="tools.html" class="back-link">&larr; All Tools</a>
+        <h1><span class="mut">Mutation Waterfall</span> Plot Generator</h1>
+        <span class="credit">Developed by Dr. Gaurav Chatterjee</span>
+      </div>
+      <div class="tool-bar-right">
+        <a href="https://generate-oncoplot.streamlit.app/" target="_blank" rel="noopener" class="ext-link">Open in new tab &nearr;</a>
+      </div>
+    </div>
+
+    <div class="iframe-wrap">
+      <iframe
+        src="https://generate-oncoplot.streamlit.app/?embedded=true"
+        title="Mutation Waterfall Plot Generator"
+        allow="clipboard-read; clipboard-write"
+        loading="lazy"
+      ></iframe>
+    </div>
+  </main>
+
+  <script>
+    // Minimal background animation (kept subtle since iframe is the focus)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    const canvas = document.getElementById("nucleotideCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const SPEED_FACTOR = isMobile ? 0.25 : 0.45;
+    const LIFETIME_MS  = isMobile ? 2200 : 2800;
+    const MUT_RATE     = 0.03;
+    const COL_WIDTH    = isMobile ? 44 : 32;
+    const ROW_SCALE_MIN = 1.3;
+    const ROW_SCALE_MAX = 1.7;
+
+    function resizeCanvas() {
+      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : (window.devicePixelRatio || 1);
+      canvas.style.position = "fixed";
+      canvas.style.top = 0;
+      canvas.style.left = 0;
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeCanvas();
+
+    const bases = ["A","T","G","C"];
+    let columns = [];
+    let animationId = null;
+
+    function rand(a,b){ return a + Math.random()*(b-a); }
+
+    function newColumn(i) {
+      const fontSize = isMobile ? (14 + Math.random() * 20) : (18 + Math.random() * 28);
+      const rowScale = rand(ROW_SCALE_MIN, ROW_SCALE_MAX);
+      return {
+        x: i * COL_WIDTH + Math.floor(COL_WIDTH * 0.5),
+        y: Math.random() * window.innerHeight,
+        speed: (0.8 + Math.random() * 1.2) * SPEED_FACTOR,
+        fontSize,
+        rowStep: fontSize * rowScale,
+        depth: 0.6 + Math.random() * 0.8,
+        lastEmitY: 0,
+        trail: []
+      };
+    }
+
+    function rebuildColumns() {
+      const count = Math.max(1, Math.floor(window.innerWidth / COL_WIDTH));
+      const maxCols = isMobile ? 12 : 36;
+      const finalCount = Math.min(count, maxCols);
+      columns = new Array(finalCount).fill(0).map((_, i) => {
+        const c = newColumn(i);
+        c.lastEmitY = c.y;
+        return c;
+      });
+    }
+    rebuildColumns();
+
+    const easeOutQuad = t => 1 - (1 - t) * (1 - t);
+
+    let lastFrame = 0;
+    const targetFPS = isMobile ? 30 : 60;
+    const frameDelay = 1000 / targetFPS;
+
+    function draw(now) {
+      if (isMobile && (now - lastFrame) < frameDelay) {
+        animationId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      columns.forEach((col, idx) => {
+        col.y += col.speed * col.depth;
+        while (col.y - col.lastEmitY >= col.rowStep) {
+          col.lastEmitY += col.rowStep;
+          const char = bases[(Math.random() * bases.length) | 0];
+          const isMut = Math.random() < MUT_RATE;
+          col.trail.push({
+            x: col.x, y: col.lastEmitY, char,
+            color: isMut ? "#D80000" : "rgb(10,30,120)",
+            size: col.fontSize, born: now
+          });
+        }
+        if (col.y > window.innerHeight + col.rowStep) {
+          const next = newColumn(idx);
+          next.y = 0; next.lastEmitY = -next.rowStep;
+          columns[idx] = next;
+        }
+        const alive = [];
+        const maxTrailLength = isMobile ? 8 : 14;
+        for (let i = 0; i < Math.min(col.trail.length, maxTrailLength); i++) {
+          const g = col.trail[i];
+          const age = now - g.born;
+          if (age <= LIFETIME_MS) {
+            const t = age / LIFETIME_MS;
+            const alpha = (1 - easeOutQuad(t)) * 0.8;
+            ctx.globalAlpha = alpha;
+            if (!isMobile) { ctx.shadowColor = g.color; ctx.shadowBlur = Math.max(0, (g.size - 18) * 0.15); }
+            ctx.font = `${g.size}px monospace`;
+            ctx.fillStyle = g.color;
+            ctx.fillText(g.char, g.x, g.y);
+            alive.push(g);
+          }
+        }
+        col.trail = alive;
+      });
+
+      ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+      animationId = requestAnimationFrame(draw);
+    }
+
+    animationId = requestAnimationFrame(draw);
+
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => { resizeCanvas(); rebuildColumns(); }, 250);
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && animationId) { cancelAnimationFrame(animationId); animationId = null; }
+      else if (!document.hidden && !animationId) { animationId = requestAnimationFrame(draw); }
+    });
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function handleMotionPreference() {
+      if (mediaQuery.matches) {
+        if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else if (!animationId) { animationId = requestAnimationFrame(draw); }
+    }
+    mediaQuery.addEventListener?.('change', handleMotionPreference);
+    handleMotionPreference();
+  </script>
+</body>
+</html>

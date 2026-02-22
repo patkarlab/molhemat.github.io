@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="description" content="Research tools from the Molecular Hematology Research Group at ACTREC, Tata Memorial Centre, Mumbai, India." />
+  <title>Tools – Molecular Hematology Research Group</title>
+  <style>
+    :root{
+      --ink:#0a1e78;
+      --mut:#D80000;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background:#ffffff; }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--ink);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Navigation bar */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.85);
+      padding: 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(10,30,120,0.08);
+    }
+    .nav a {
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    .nav a:hover { background: rgba(10,30,120,0.08); }
+    .nav a.active { background: var(--ink); color: white; }
+
+    /* Canvas */
+    #nucleotideCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+
+    /* Main content */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      padding: 120px 20px 80px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .page-title {
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      margin: 0 0 12px 0;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+    .mut { color: var(--mut); }
+
+    .page-subtitle {
+      text-align: center;
+      font-size: clamp(15px, 2.2vw, 18px);
+      color: rgba(10,30,120,0.7);
+      margin: 0 auto 48px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Tool cards grid */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .tool-card {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 4px 20px rgba(10,30,120,0.07);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+    }
+    .tool-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 36px rgba(10,30,120,0.14);
+    }
+
+    .tool-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+    .tool-icon.blue {
+      background: rgba(10,30,120,0.08);
+      color: var(--ink);
+    }
+    .tool-icon.red {
+      background: rgba(216,0,0,0.08);
+      color: var(--mut);
+    }
+
+    .tool-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      color: var(--ink);
+    }
+
+    .tool-card .tool-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(10,30,120,0.7);
+      margin: 0 0 20px 0;
+      flex-grow: 1;
+    }
+
+    .tool-card .tool-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tool-tag {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(10,30,120,0.06);
+      color: var(--ink);
+    }
+    .tool-tag.client { background: rgba(45,106,79,0.1); color: #2d6a4f; }
+    .tool-tag.web { background: rgba(216,0,0,0.08); color: var(--mut); }
+
+    .tool-card .tool-cta {
+      margin-top: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      transition: gap 0.2s ease;
+    }
+    .tool-card:hover .tool-cta { gap: 10px; }
+    .tool-cta .arrow { font-size: 18px; }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      left: 0; right: 0; bottom: 12px;
+      text-align: center;
+      font-size: 11px;
+      opacity: .6;
+      z-index: 10;
+      padding: 0 20px;
+      pointer-events: none;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav { top: 12px; padding: 6px; gap: 4px; }
+      .nav a { padding: 8px 14px; font-size: 13px; }
+      .container { padding: 88px 16px 60px; }
+      .tools-grid { grid-template-columns: 1fr; gap: 20px; }
+      .tool-card { padding: 24px 20px; }
+      #nucleotideCanvas { opacity: 0.45; }
+    }
+
+    @media (max-width: 380px) {
+      .nav { gap: 2px; padding: 4px; }
+      .nav a { padding: 6px 10px; font-size: 12px; }
+    }
+
+    @media (min-width: 1200px) {
+      .nav a { font-size: 16px; padding: 12px 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #nucleotideCanvas { display: none; }
+      .tool-card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html">Home</a>
+    <a href="team.html">Team</a>
+    <a href="research.html">Research</a>
+    <a href="publications.html">Publications</a>
+    <a href="tools.html" class="active">Tools</a>
+    <a href="social.html">Social</a>
+  </nav>
+
+  <!-- Animated nucleotide rain canvas (background) -->
+  <canvas id="nucleotideCanvas" aria-hidden="true"></canvas>
+
+  <!-- Main content -->
+  <main class="container" role="main">
+    <h1 class="page-title"><span class="mut">Research</span> Tools</h1>
+    <p class="page-subtitle">Open-access tools developed by our group for genomics and clinical research.</p>
+
+    <div class="tools-grid">
+      <!-- Gene Coordinate Extractor -->
+      <a href="gene_coordinate_extractor.html" class="tool-card">
+        <div class="tool-icon blue">&#x1F9EC;</div>
+        <h3>Gene Coordinate Extractor</h3>
+        <p class="tool-desc">Retrieve exonic and intronic coordinates for human genes using MANE Select transcripts. Supports hg38 and hg19 assemblies with BED file export.</p>
+        <div class="tool-tags">
+          <span class="tool-tag client">Client-side</span>
+          <span class="tool-tag">UCSC API</span>
+          <span class="tool-tag">BED Export</span>
+        </div>
+        <span class="tool-cta">Open tool <span class="arrow">&rarr;</span></span>
+      </a>
+
+      <!-- EasySurv -->
+      <a href="easysurv.html" class="tool-card">
+        <div class="tool-icon red">&#x1F4CA;</div>
+        <h3>EasySurv</h3>
+        <p class="tool-desc">Code-free survival analysis platform. Kaplan-Meier plots, Cox regression, competing risks, biomarker optimization, and AI-powered result narration.</p>
+        <div class="tool-tags">
+          <span class="tool-tag web">Web App</span>
+          <span class="tool-tag">Survival Analysis</span>
+          <span class="tool-tag">Publication-Ready</span>
+        </div>
+        <span class="tool-cta">Open tool <span class="arrow">&rarr;</span></span>
+      </a>
+
+      <!-- Mutation Waterfall Plot Generator -->
+      <a href="oncoplot.html" class="tool-card">
+        <div class="tool-icon red">&#x1F9EA;</div>
+        <h3>Mutation Waterfall Plot Generator</h3>
+        <p class="tool-desc">Generate publication-ready oncoplot / waterfall plots from mutation data. Visualize mutation landscapes across patient cohorts with customizable styling.</p>
+        <div class="tool-tags">
+          <span class="tool-tag web">Web App</span>
+          <span class="tool-tag">Oncoplots</span>
+          <span class="tool-tag">Visualization</span>
+        </div>
+        <span class="tool-cta">Open tool <span class="arrow">&rarr;</span></span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">&copy; <span id="year"></span> Molecular Hematology Research Group &middot; ACTREC &middot; TMC</footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Detect if mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    const canvas = document.getElementById("nucleotideCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const SPEED_FACTOR = isMobile ? 0.25 : 0.45;
+    const LIFETIME_MS  = isMobile ? 2200 : 2800;
+    const MUT_RATE     = 0.03;
+    const COL_WIDTH    = isMobile ? 44 : 32;
+    const ROW_SCALE_MIN = 1.3;
+    const ROW_SCALE_MAX = 1.7;
+
+    function resizeCanvas() {
+      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : (window.devicePixelRatio || 1);
+      canvas.style.position = "fixed";
+      canvas.style.top = 0;
+      canvas.style.left = 0;
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resizeCanvas();
+
+    const bases = ["A","T","G","C"];
+    let columns = [];
+    let animationId = null;
+
+    function rand(a,b){ return a + Math.random()*(b-a); }
+
+    function newColumn(i) {
+      const fontSize = isMobile ? (14 + Math.random() * 20) : (18 + Math.random() * 28);
+      const rowScale = rand(ROW_SCALE_MIN, ROW_SCALE_MAX);
+      return {
+        x: i * COL_WIDTH + Math.floor(COL_WIDTH * 0.5),
+        y: Math.random() * window.innerHeight,
+        speed: (0.8 + Math.random() * 1.2) * SPEED_FACTOR,
+        fontSize,
+        rowStep: fontSize * rowScale,
+        depth: 0.6 + Math.random() * 0.8,
+        lastEmitY: 0,
+        trail: []
+      };
+    }
+
+    function rebuildColumns() {
+      const count = Math.max(1, Math.floor(window.innerWidth / COL_WIDTH));
+      const maxCols = isMobile ? 12 : 36;
+      const finalCount = Math.min(count, maxCols);
+      columns = new Array(finalCount).fill(0).map((_, i) => {
+        const c = newColumn(i);
+        c.lastEmitY = c.y;
+        return c;
+      });
+    }
+    rebuildColumns();
+
+    const easeOutQuad = t => 1 - (1 - t) * (1 - t);
+
+    let lastFrame = 0;
+    const targetFPS = isMobile ? 30 : 60;
+    const frameDelay = 1000 / targetFPS;
+
+    function draw(now) {
+      if (isMobile && (now - lastFrame) < frameDelay) {
+        animationId = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+      columns.forEach((col, idx) => {
+        col.y += col.speed * col.depth;
+
+        while (col.y - col.lastEmitY >= col.rowStep) {
+          col.lastEmitY += col.rowStep;
+          const char = bases[(Math.random() * bases.length) | 0];
+          const isMut = Math.random() < MUT_RATE;
+          col.trail.push({
+            x: col.x, y: col.lastEmitY, char,
+            color: isMut ? "#D80000" : "rgb(10,30,120)",
+            size: col.fontSize, born: now
+          });
+        }
+
+        if (col.y > window.innerHeight + col.rowStep) {
+          const next = newColumn(idx);
+          next.y = 0;
+          next.lastEmitY = -next.rowStep;
+          columns[idx] = next;
+        }
+
+        const alive = [];
+        const maxTrailLength = isMobile ? 8 : 14;
+        for (let i = 0; i < Math.min(col.trail.length, maxTrailLength); i++) {
+          const g = col.trail[i];
+          const age = now - g.born;
+          if (age <= LIFETIME_MS) {
+            const t = age / LIFETIME_MS;
+            const alpha = (1 - easeOutQuad(t)) * 0.8;
+            ctx.globalAlpha = alpha;
+            if (!isMobile) {
+              ctx.shadowColor = g.color;
+              ctx.shadowBlur = Math.max(0, (g.size - 18) * 0.15);
+            }
+            ctx.font = `${g.size}px monospace`;
+            ctx.fillStyle = g.color;
+            ctx.fillText(g.char, g.x, g.y);
+            alive.push(g);
+          }
+        }
+        col.trail = alive;
+      });
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      animationId = requestAnimationFrame(draw);
+    }
+
+    animationId = requestAnimationFrame(draw);
+
+    let resizeTimeout;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => { resizeCanvas(); rebuildColumns(); }, 250);
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden && animationId) { cancelAnimationFrame(animationId); animationId = null; }
+      else if (!document.hidden && !animationId) { animationId = requestAnimationFrame(draw); }
+    });
+
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    function handleMotionPreference() {
+      if (mediaQuery.matches) {
+        if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else if (!animationId) { animationId = requestAnimationFrame(draw); }
+    }
+    mediaQuery.addEventListener?.('change', handleMotionPreference);
+    handleMotionPreference();
+  </script>
+</body>
+</html>
