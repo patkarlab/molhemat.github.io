@@ -310,7 +310,8 @@ function markDirty(tab) {
 }
 function updatePending() {
   const n = dirty.size + uploads.length;
-  $("#pending-n").textContent = n;
+  const badge = $("#pending-n");
+  if (badge) badge.textContent = n;   // badge is absent while the publish spinner is shown
   $("#publish-btn").disabled = n === 0;
 }
 async function stageUpload(file, folder) {
@@ -697,7 +698,6 @@ $("#publish-btn").addEventListener("click", async () => {
       await putFile(FILES[tab], b64encodeUtf8(JSON.stringify(store[tab], null, 2)), `Update ${FILES[tab]} via site manager`);
       dirty.delete(tab);
     }
-    updatePending();
     toast("✅ Published! The live site updates within a minute or two.");
   } catch (err) {
     toast(err.message, true);
