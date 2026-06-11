@@ -2,463 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Molecular Hematology Research Group at ACTREC, Tata Memorial Centre, Mumbai, India. Translational research in blood cancers led by Prof. Nikhil Patkar." />
-  <title>Molecular Hematology Research Group – Prof. Nikhil Patkar's Blood Cancer Research Group</title>
+  <title>Molecular Hematology Research Group — Prof. Nikhil Patkar's Blood Cancer Research Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/site.css">
   <style>
-    :root{
-      --ink:#0a1e78;
-      --mut:#D80000;
+    .hero{min-height:calc(100vh - 60px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding-top:90px}
+    .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+    .stats{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:46px}
+    .stat{
+      background:var(--surface);border:1px solid rgba(255,255,255,.85);border-radius:16px;
+      padding:16px 26px;box-shadow:var(--shadow-sm);backdrop-filter:blur(10px);min-width:140px;
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html, body { 
-      margin:0; 
-      padding:0; 
-      background:#ffffff; 
-    }
-    
-    body { 
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; 
-      color: var(--ink);
-      min-height: 100vh;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* Navigation bar */
-    .nav {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 100;
-      display: flex;
-      gap: 8px;
-      background: rgba(255,255,255,0.85);
-      padding: 8px;
-      border-radius: 999px;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 2px 12px rgba(10,30,120,0.08);
-    }
-
-    .nav a {
-      text-decoration: none;
-      color: var(--ink);
-      font-weight: 500;
-      padding: 10px 20px;
-      border-radius: 999px;
-      transition: all 0.2s ease;
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .nav a:hover {
-      background: rgba(10,30,120,0.08);
-    }
-
-    .nav a.active {
-      background: var(--ink);
-      color: white;
-    }
-
-    /* Canvas positioning */
-    #nucleotideCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.35; /* lower opacity so the background never overpowers text */
-    }
-
-    /* Main content container */
-    .hero {
-      position: relative;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      min-height: 100dvh;
-      padding: 20px;
-      text-align: center;
-    }
-
-    /* Translucent panel to prevent overlay/clash */
-    .panel {
-      max-width: 980px;
-      width: min(94vw, 980px);
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-radius: 24px;
-      padding: clamp(16px, 4vw, 32px) clamp(16px, 5vw, 40px);
-      box-shadow: 0 8px 30px rgba(10,30,120,0.07);
-    }
-
-    h1{
-      margin: 0 0 24px 0;
-      font-size: clamp(28px, 6vw, 56px); /* smaller heading as requested */
-      line-height: 1.12;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    /* Make "Molecular Hematology" red */
-    .mut { color: var(--mut); }
-
-    .mission{
-      margin: 0 auto;
-      font-size: clamp(16px, 2.3vw, 22px);
-      line-height: 1.6; /* slightly more relaxed for readability */
-      max-width: 900px;
-      font-weight: 400;
-      opacity: 0.9;
-    }
-
-    /* Footer */
-    .footer{ 
-      position: fixed; 
-      left: 0; 
-      right: 0; 
-      bottom: 12px; 
-      text-align: center; 
-      font-size: 11px; 
-      opacity: .6; 
-      z-index: 10;
-      padding: 0 20px;
-      pointer-events: none;
-    }
-
-    /* Mobile-specific adjustments */
-    @media (max-width: 768px) {
-      .nav {
-        top: 12px;
-        padding: 6px;
-        gap: 4px;
-      }
-
-      .nav a {
-        padding: 8px 14px;
-        font-size: 13px;
-      }
-      
-      .hero {
-        padding: 88px 16px 16px;
-      }
-      
-      h1 {
-        font-size: clamp(24px, 7vw, 34px);
-        margin-bottom: 18px;
-      }
-      
-      .mission {
-        font-size: 18px;
-      }
-      
-      .footer {
-        font-size: 10px;
-        bottom: 8px;
-      }
-
-      #nucleotideCanvas {
-        opacity: 0.45; /* a touch stronger on mobile so background remains visible yet subdued */
-      }
-    }
-
-    /* Very small devices */
-    @media (max-width: 380px) {
-      .nav {
-        gap: 2px;
-        padding: 4px;
-      }
-
-      .nav a {
-        padding: 6px 10px;
-        font-size: 12px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-      
-      .mission {
-        font-size: 16px;
-      }
-    }
-
-    /* Large screens */
-    @media (min-width: 1200px) {
-      h1 {
-        font-size: 60px; /* still smaller than previous 80px */
-      }
-      
-      .mission {
-        font-size: 22px;
-      }
-
-      .nav a {
-        font-size: 16px;
-        padding: 12px 24px;
-      }
-    }
-
-    /* Landscape mobile adjustments */
-    @media (max-height: 500px) and (orientation: landscape) {
-      .nav {
-        top: 8px;
-      }
-
-      .nav a {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-
-      .hero {
-        padding-top: 60px;
-      }
-      
-      h1 {
-        font-size: 26px;
-        margin-bottom: 14px;
-      }
-      
-      .mission {
-        font-size: 16px;
-      }
-    }
-
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce) { 
-      #nucleotideCanvas { display: none; }
-    }
-
-    /* Reduce animation complexity on mobile */
-    @media (max-width: 768px) and (pointer: coarse) {
-      #nucleotideCanvas {
-        opacity: 0.45;
-      }
-    }
+    .stat b{font-family:var(--font-head);font-size:26px;display:block;letter-spacing:-.02em}
+    .stat span{font-size:12.5px;color:var(--ink-faint);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+    .quick{margin:30px 0 80px}
+    .quick .card{text-decoration:none;color:inherit;display:block}
+    .quick .card h3{font-family:var(--font-head);font-size:18px;margin:12px 0 8px}
+    .quick .card p{font-size:14px;color:var(--ink-soft);line-height:1.6;margin:0}
+    .quick .ic{font-size:26px}
+    .quick .go{display:inline-block;margin-top:14px;font-size:13.5px;font-weight:650;color:var(--red)}
+    .recent .pub .meta .cap{font-size:13.5px}
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav class="nav">
-    <a href="index.html" class="active">Home</a>
-    <a href="team.html">Team</a>
-    <a href="research.html">Research</a>
-    <a href="publications.html">Publications</a>
-    <a href="tools.html">Tools</a>
-    <a href="social.html">Social</a>
-  </nav>
+  <div id="site-nav"></div>
+  <canvas id="dna" aria-hidden="true"></canvas>
 
-  <!-- Animated nucleotide rain canvas (background) -->
-  <canvas id="nucleotideCanvas" aria-hidden="true"></canvas>
+  <main class="container" role="main">
+    <section class="hero">
+      <span class="eyebrow reveal">ACTREC · Tata Memorial Centre · Mumbai</span>
+      <h1 class="display reveal"><span class="grad-text">Molecular Hematology</span><br>Research Group</h1>
+      <p class="lede reveal">Our mission is to improve the diagnosis, prognostication and monitoring of acute leukaemia and rapidly translate these discoveries into the clinics.</p>
+      <div class="cta-row reveal">
+        <a class="btn primary" href="research.html">Explore our research</a>
+        <a class="btn ghost" href="team.html">Meet the team</a>
+      </div>
+      <div class="stats reveal" id="stats" hidden>
+        <div class="stat"><b id="st-members">—</b><span>Team members</span></div>
+        <div class="stat"><b id="st-pubs">—</b><span>Featured papers</span></div>
+        <div class="stat"><b id="st-tools">—</b><span>Open tools</span></div>
+      </div>
+    </section>
 
-  <!-- Main content -->
-  <main class="hero" role="main">
-    <div class="panel">
-      <h1><span class="mut">Molecular Hematology</span> Research Group</h1>
-      <p class="mission">Our mission is to improve the diagnosis, prognostication and monitoring of acute leukaemia and rapidly translate these discoveries into the clinics.</p>
-    </div>
+    <section class="quick section">
+      <div class="grid cols-3">
+        <a class="card reveal" href="research.html">
+          <div class="ic">🔬</div>
+          <h3>Research</h3>
+          <p>Measurable residual disease, novel NGS methods, AI for blood cancers, leukemia genomics and lymphoma monitoring.</p>
+          <span class="go">Read more →</span>
+        </a>
+        <a class="card reveal" href="publications.html">
+          <div class="ic">📄</div>
+          <h3>Publications</h3>
+          <p>Highlighted papers, consensus documents and invited reviews from the group.</p>
+          <span class="go">Browse papers →</span>
+        </a>
+        <a class="card reveal" href="tools.html">
+          <div class="ic">🛠️</div>
+          <h3>Tools</h3>
+          <p>Open-access web tools for genomics and clinical research, built by our group.</p>
+          <span class="go">Open tools →</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="recent section" id="recent" hidden>
+      <h2 class="section-head reveal">Latest <span class="grad-text">highlighted work</span></h2>
+      <p class="section-sub reveal">A snapshot of our most recent featured publications.</p>
+      <div class="grid cols-3" id="recent-grid"></div>
+    </section>
   </main>
 
-  <footer class="footer">© <span id="year"></span> Molecular Hematology Research Group · ACTREC · TMC</footer>
-
+  <div id="site-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/dna.js"></script>
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    (async () => {
+      try {
+        const [team, pubs, tools] = await Promise.all([
+          loadData("team.json"), loadData("publications.json"), loadData("tools.json")
+        ]);
+        const members = team.sections.reduce((n, s) => n + s.members.length, 0);
+        const papers = pubs.sections.reduce((n, s) => n + s.items.length, 0);
+        document.getElementById("st-members").textContent = members;
+        document.getElementById("st-pubs").textContent = papers;
+        document.getElementById("st-tools").textContent = tools.tools.length;
+        document.getElementById("stats").hidden = false;
 
-    // Detect if mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const isSmallScreen = window.innerWidth <= 768;
-    
-    const canvas = document.getElementById("nucleotideCanvas");
-    const ctx = canvas.getContext("2d");
-
-    // Adjust animation parameters for mobile
-    const SPEED_FACTOR = isMobile ? 0.25 : 0.45; // slightly slower overall
-    const LIFETIME_MS  = isMobile ? 2200 : 2800;
-    const MUT_RATE     = 0.03;
-    const COL_WIDTH    = isMobile ? 44 : 32; // a tad wider columns for more breathing room
-    const ROW_SCALE_MIN = 1.3;
-    const ROW_SCALE_MAX = 1.7;
-
-    // HiDPI crispness with performance consideration
-    function resizeCanvas() {
-      const dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 2) : (window.devicePixelRatio || 1);
-      canvas.style.position = "fixed";
-      canvas.style.top = 0; 
-      canvas.style.left = 0; 
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      canvas.width = Math.floor(window.innerWidth * dpr);
-      canvas.height = Math.floor(window.innerHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resizeCanvas();
-
-    const bases = ["A","T","G","C"];
-    let columns = [];
-    let animationId = null;
-
-    function rand(a,b){ return a + Math.random()*(b-a); }
-
-    function newColumn(i) {
-      const fontSize = isMobile ? (14 + Math.random() * 20) : (18 + Math.random() * 28);
-      const rowScale = rand(ROW_SCALE_MIN, ROW_SCALE_MAX);
-      return {
-        x: i * COL_WIDTH + Math.floor(COL_WIDTH * 0.5),
-        y: Math.random() * window.innerHeight,
-        speed: (0.8 + Math.random() * 1.2) * SPEED_FACTOR,
-        fontSize,
-        rowStep: fontSize * rowScale,
-        depth: 0.6 + Math.random() * 0.8,
-        lastEmitY: 0,
-        trail: []
-      };
-    }
-
-    function rebuildColumns() {
-      const count = Math.max(1, Math.floor(window.innerWidth / COL_WIDTH));
-      const maxCols = isMobile ? 12 : 36;
-      const finalCount = Math.min(count, maxCols);
-      
-      columns = new Array(finalCount).fill(0).map((_, i) => {
-        const c = newColumn(i);
-        c.lastEmitY = c.y;
-        return c;
-      });
-    }
-    rebuildColumns();
-
-    const easeOutQuad = t => 1 - (1 - t) * (1 - t);
-
-    // Throttle animation on mobile
-    let lastFrame = 0;
-    const targetFPS = isMobile ? 30 : 60;
-    const frameDelay = 1000 / targetFPS;
-
-    function draw(now) {
-      // FPS throttling for mobile
-      if (isMobile && (now - lastFrame) < frameDelay) {
-        animationId = requestAnimationFrame(draw);
-        return;
-      }
-      lastFrame = now;
-
-      // Clear with white background
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-      columns.forEach((col, idx) => {
-        // Move the head
-        col.y += col.speed * col.depth;
-
-        // Emit new characters
-        while (col.y - col.lastEmitY >= col.rowStep) {
-          col.lastEmitY += col.rowStep;
-
-          const char = bases[(Math.random() * bases.length) | 0];
-          const isMut = Math.random() < MUT_RATE;
-
-          col.trail.push({
-            x: col.x,
-            y: col.lastEmitY,
-            char,
-            color: isMut ? "#D80000" : "rgb(10,30,120)",
-            size: col.fontSize,
-            born: now
-          });
+        const latest = (pubs.sections[0]?.items || []).slice(0, 3);
+        if (latest.length) {
+          document.getElementById("recent-grid").innerHTML = latest.map(p => `
+            <a class="card pub reveal" href="${esc(p.link)}" target="_blank" rel="noopener">
+              <div class="thumb"><img src="${esc(p.image)}" alt="${esc(p.caption)}" loading="lazy"></div>
+              <div class="meta"><p class="yr">${esc(p.year)}</p><p class="cap">${esc(p.caption)}</p></div>
+            </a>`).join("");
+          document.getElementById("recent").hidden = false;
         }
-
-        // Recycle column
-        if (col.y > window.innerHeight + col.rowStep) {
-          const next = newColumn(idx);
-          next.y = 0;
-          next.lastEmitY = -next.rowStep;
-          columns[idx] = next;
-        }
-
-        // Render & prune trail
-        const alive = [];
-        const maxTrailLength = isMobile ? 8 : 14;
-        
-        for (let i = 0; i < Math.min(col.trail.length, maxTrailLength); i++) {
-          const g = col.trail[i];
-          const age = now - g.born;
-          if (age <= LIFETIME_MS) {
-            const t = age / LIFETIME_MS;
-            const alpha = (1 - easeOutQuad(t)) * 0.8;
-
-            ctx.globalAlpha = alpha;
-            
-            if (!isMobile) {
-              ctx.shadowColor = g.color;
-              ctx.shadowBlur = Math.max(0, (g.size - 18) * 0.15);
-            }
-
-            ctx.font = `${g.size}px monospace`;
-            ctx.fillStyle = g.color;
-            ctx.fillText(g.char, g.x, g.y);
-
-            alive.push(g);
-          }
-        }
-        col.trail = alive;
-      });
-
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
-      animationId = requestAnimationFrame(draw);
-    }
-    
-    // Start animation
-    animationId = requestAnimationFrame(draw);
-
-    // Debounced resize handler
-    let resizeTimeout;
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        resizeCanvas();
-        rebuildColumns();
-      }, 250);
-    });
-
-    // Pause animation when page is not visible (saves battery on mobile)
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden && animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      } else if (!document.hidden && !animationId) {
-        animationId = requestAnimationFrame(draw);
-      }
-    });
-
-    // Respect reduced motion
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    function handleMotionPreference() {
-      if (mediaQuery.matches) {
-        if (animationId) {
-          cancelAnimationFrame(animationId);
-          animationId = null;
-        }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-      } else if (!animationId) {
-        animationId = requestAnimationFrame(draw);
-      }
-    }
-    mediaQuery.addEventListener?.('change', handleMotionPreference);
-    handleMotionPreference();
+        observeReveals();
+      } catch (e) { console.error(e); }
+    })();
   </script>
 </body>
 </html>

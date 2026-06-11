@@ -1,0 +1,28 @@
+{
+  "sections": [
+    {
+      "title": "Highlighted Publications",
+      "items": [
+        { "caption": "Mawalankar et al., JCO Global Oncology", "year": "2026", "image": "photos/highlighted_papers/2026 Mawalankar et al JCO GO.png", "link": "photos/highlighted_papers/2026 Mawalankar et al JCO GO.pdf" },
+        { "caption": "Narasimha K et al., JCP", "year": "2026", "image": "photos/highlighted_papers/2026 Narasimha K et al JCP.png", "link": "https://pubmed.ncbi.nlm.nih.gov/41819800/" },
+        { "caption": "Patkar et al., Leukemia", "year": "2021", "image": "photos/highlighted_papers/2021 Patkar et al Leukemia.jpg", "link": "photos/highlighted_papers/2021 Patkar et al Leukemia.pdf" },
+        { "caption": "Nathany et al., IJLH", "year": "2021", "image": "photos/highlighted_papers/2021 Nathany et al IJLH.png", "link": "https://pubmed.ncbi.nlm.nih.gov/34387930/" },
+        { "caption": "Shaikh et al., Leukemia & Lymphoma", "year": "2020", "image": "photos/highlighted_papers/2020 Shaikh et al Leuk Lymphoma.jpg", "link": "photos/highlighted_papers/2020 Shaikh et al Leuk Lymphoma.pdf" },
+        { "caption": "Patkar et al., Blood Cancer Journal", "year": "2020", "image": "photos/highlighted_papers/2020 Patkar et al BCJ Narasimha.jpg", "link": "photos/highlighted_papers/2020 Patkar et al BCJ Narasimha.pdf" },
+        { "caption": "Patkar et al., Blood Cancer Journal", "year": "2019", "image": "photos/highlighted_papers/2019 Patkar et al BCJ NPM1.jpg", "link": "photos/highlighted_papers/2019 Patkar et al BCJ NPM1.pdf" },
+        { "caption": "Patkar et al., Oncotarget", "year": "2018", "image": "photos/highlighted_papers/2018 Patkar et al Oncotarget.jpg", "link": "photos/highlighted_papers/2018 Patkar et al Oncotarget.pdf" },
+        { "caption": "Patkar et al., Frontiers", "year": "2018", "image": "photos/highlighted_papers/2018 Patkar et al Frontiers.jpg", "link": "photos/highlighted_papers/2018 Patkar et al Frontiers.pdf" }
+      ]
+    },
+    {
+      "title": "Consensus Documents / Invited Reviews",
+      "items": [
+        { "caption": "JCP Review", "year": "2025", "image": "photos/invited_reviews/2025 Review JCP.jpg", "link": "photos/invited_reviews/2025 Review JCP.pdf" },
+        { "caption": "Histopathology Review", "year": "2024", "image": "photos/invited_reviews/2024 Review Histopathology.jpg", "link": "photos/invited_reviews/2024 Review Histopathology.pdf" },
+        { "caption": "IJMPO Review", "year": "2023", "image": "photos/invited_reviews/2023 Review IJMPO.jpg", "link": "photos/invited_reviews/2023 Review IJMPO.pdf" },
+        { "caption": "Commentary, BJH", "year": "2023", "image": "photos/invited_reviews/2023 Commentary BJH.png", "link": "photos/invited_reviews/2023 Commentary BJH.pdf" },
+        { "caption": "Leukemia WHO Classification Review", "year": "2022", "image": "photos/invited_reviews/2022 Review WHO Leukemia.jpg", "link": "photos/invited_reviews/2022 Review WHO Leukemia.pdf" }
+      ]
+    }
+  ]
+}

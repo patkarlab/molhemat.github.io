@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Lab life and event photos from the Molecular Hematology Research Group at ACTREC, Tata Memorial Centre." />
+  <title>Social — Molecular Hematology Research Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+  <div id="site-nav"></div>
+  <canvas id="dna" aria-hidden="true"></canvas>
+
+  <main class="container" role="main">
+    <header style="text-align:center;margin-bottom:60px">
+      <span class="eyebrow reveal">Life in the lab</span>
+      <h1 class="display reveal">Lab <span class="grad-text">Moments</span></h1>
+      <p class="lede reveal">Celebrations, conferences, retreats and everyday life of the Molecular Hematology Research Group.</p>
+    </header>
+    <div id="gallery-root"><div class="empty-state">Loading photos…</div></div>
+  </main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <img id="lb-img" src="" alt="">
+    <div class="lb-cap" id="lb-cap"></div>
+  </div>
+
+  <div id="site-footer"></div>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/dna.js"></script>
+  <script>
+    (async () => {
+      const root = document.getElementById("gallery-root");
+      try {
+        const data = await loadData("social.json");
+        const photos = data.photos || [];
+        if (!photos.length) {
+          root.innerHTML = `<div class="empty-state">📷 No photos yet — check back soon!</div>`;
+          return;
+        }
+        root.innerHTML = `<div class="gallery">` + photos.map((p, i) => `
+          <figure class="shot reveal" data-i="${i}">
+            <img src="${esc(p.image)}" alt="${esc(p.caption || "Lab photo")}" loading="lazy">
+            ${p.caption ? `<figcaption>${esc(p.caption)}${p.date ? ` · <span style="opacity:.7">${esc(p.date)}</span>` : ""}</figcaption>` : ""}
+          </figure>`).join("") + `</div>`;
+        observeReveals();
+
+        const lb = document.getElementById("lightbox");
+        const lbImg = document.getElementById("lb-img");
+        const lbCap = document.getElementById("lb-cap");
+        root.querySelectorAll(".shot").forEach(el => el.addEventListener("click", () => {
+          const p = photos[+el.dataset.i];
+          lbImg.src = p.image;
+          lbCap.textContent = [p.caption, p.date].filter(Boolean).join(" · ");
+          lb.classList.add("open");
+        }));
+        lb.addEventListener("click", () => lb.classList.remove("open"));
+        document.addEventListener("keydown", e => { if (e.key === "Escape") lb.classList.remove("open"); });
+      } catch (e) {
+        root.innerHTML = `<div class="empty-state">Could not load photos. Please try again later.</div>`;
+        console.error(e);
+      }
+    })();
+  </script>
+</body>
+</html>

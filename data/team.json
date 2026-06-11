@@ -1,0 +1,84 @@
+{
+  "sections": [
+    {
+      "title": "Principal Investigator",
+      "members": [
+        { "name": "Prof. Nikhil Patkar", "role": "Principal Investigator", "credentials": "MD, DNB", "photo": "photos/teams/nikhil_patkar.jpg", "cv": "photos/teams/nikhil_patkar_cv.pdf", "featured": true }
+      ]
+    },
+    {
+      "title": "Co-Principal Investigator",
+      "members": [
+        { "name": "Dr. Gaurav Chatterjee", "role": "Co-Principal Investigator", "credentials": "MD, M.Res", "photo": "photos/teams/gaurav_chatterjee.JPG", "cv": "photos/teams/gaurav_chatterjee_cv.pdf", "featured": true }
+      ]
+    },
+    {
+      "title": "Scientific Staff",
+      "members": [
+        { "name": "Dr. Vishram Terse", "role": "Staff Bioinformatician", "photo": "photos/teams/vishram_terse.jpg" },
+        { "name": "Swapnali Joshi", "role": "Scientific Officer", "photo": "photos/teams/swapnali_joshi.png" },
+        { "name": "Prasanna Bhanshe", "role": "Scientific Assistant", "photo": "photos/teams/prassana_bhanshe.jpg" }
+      ]
+    },
+    {
+      "title": "Laboratory Manager",
+      "members": [
+        { "name": "Deepali Patil", "role": "Laboratory Manager", "photo": "photos/teams/deepali_patil.jpg" }
+      ]
+    },
+    {
+      "title": "Post Doctoral Fellows",
+      "members": [
+        { "name": "Dr. Gojiri Mawalankar", "role": "Post Doctoral Fellow", "credentials": "MD, Pathology", "photo": "photos/teams/drgojiri_mawalankar.jpg" },
+        { "name": "Dr. Yogesh Dhumal", "role": "Post Doctoral Fellow", "photo": "photos/teams/yogesh_dhumal.jpg" },
+        { "name": "Dr. Satyajit Ghosh", "role": "Post Doctoral Fellow (with Swapnil Rane)", "photo": "photos/teams/satyajit_ghosh.jpg" },
+        { "name": "Dr. Sabyasachi Mukherjee", "role": "Post Doctoral Fellow (with Swapnil Rane)", "photo": "photos/teams/sabyasachi_mukherjee.jpg" }
+      ]
+    },
+    {
+      "title": "Computational Biologists",
+      "members": [
+        { "name": "Gulnaz Zaidi", "role": "Bioinformatician", "photo": "photos/teams/gulnaz_zaidi.jpg" },
+        { "name": "Vaibhav Gawde", "role": "Bioinformatician", "photo": "photos/teams/vaibhav_gawde.png" }
+      ]
+    },
+    {
+      "title": "PhD Students",
+      "members": [
+        { "name": "Anuradha Sharma", "role": "PhD Student", "photo": "photos/teams/anuradha_sharma.jpg" },
+        { "name": "Deepa Tiwari", "role": "PhD Student", "photo": "photos/teams/deepa_tiwari.jpeg" },
+        { "name": "Payel Gupta", "role": "PhD Student", "photo": "photos/teams/payel_gupta.jpg" },
+        { "name": "Neha Ghosh", "role": "PhD Student (with Gaurav Chatterjee)", "photo": "photos/teams/neha_ghosh.jpg" }
+      ]
+    },
+    {
+      "title": "Research Fellows",
+      "members": [
+        { "name": "Aarti Archekar", "role": "Research Fellow", "photo": "photos/teams/aarti_archekar.JPG" },
+        { "name": "Ayush Sheth", "role": "Research Fellow", "photo": "photos/teams/ayush_sheth.jpg" },
+        { "name": "Bhadra Muralidharan", "role": "Research Fellow", "photo": "photos/teams/bhadra_muralidharan.jpeg" },
+        { "name": "Bhavya Shah", "role": "Research Fellow", "photo": "photos/teams/bhavya_shah.jpg" },
+        { "name": "Elwin Paulose", "role": "Research Fellow (with Gaurav Chatterjee)", "photo": "photos/teams/elwin_paulose.jpg" },
+        { "name": "Gunabrinda Nadar", "role": "Research Fellow", "photo": "photos/teams/gunabrinda_nadar.jpg" },
+        { "name": "Harsh Pratik", "role": "Research Fellow", "photo": "photos/teams/harsh_pratik.jpg" },
+        { "name": "Ishita Mathur", "role": "Research Fellow", "photo": "photos/teams/ishita_mathur.jpg" },
+        { "name": "Komal Kumbhalwar", "role": "Research Fellow (with Navin Khattry)", "photo": "photos/teams/komal_kumbhalwar.jpg" },
+        { "name": "Kunal Dabholkar", "role": "Research Fellow", "photo": "photos/teams/kunal_dabholkar.jpg" },
+        { "name": "Moksha Dhoka", "role": "Research Fellow", "photo": "photos/teams/moksha_dhoka.jpeg" },
+        { "name": "Nayana Mane", "role": "Research Fellow (with Sachin Punatar)", "photo": "photos/teams/nayana_mane.jpg" },
+        { "name": "Nishma Kumar", "role": "Research Fellow", "photo": "photos/teams/nishma_kumar.jpg" },
+        { "name": "Pragati Panigrahy", "role": "Research Assistant", "photo": "photos/teams/pragati_panigrahy.jpeg" },
+        { "name": "Rashmi Garag", "role": "Research Assistant", "photo": "photos/teams/rashmi_garag.jpg" }
+      ]
+    },
+    {
+      "title": "Trial Coordinators",
+      "members": [
+        { "name": "Aishwarya Kumbhar", "role": "Trial Coordinator", "photo": "photos/teams/aishwaryakumbhar.jpg" },
+        { "name": "Saniya Satpute", "role": "Trial Coordinator", "photo": "photos/teams/saniya_satpute.jpg" },
+        { "name": "Sinimole Maloor", "role": "Trial Coordinator", "photo": "photos/teams/sinimole_maloor.jpg" },
+        { "name": "Sushmita Govind Mistry", "role": "Trial Coordinator", "photo": "photos/teams/sushmita_mistry.jpg" }
+      ]
+    }
+  ]
+}

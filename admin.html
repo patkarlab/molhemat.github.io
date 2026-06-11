@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Site Manager — Molecular Hematology Research Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f5fa;--ink:#0b1233;--soft:rgba(11,18,51,.65);--faint:rgba(11,18,51,.42);
+      --navy:#0a1e78;--red:#d80000;--green:#0c7a43;
+      --card:#fff;--line:rgba(11,18,51,.10);
+      --grad:linear-gradient(92deg,#0a1e78,#5b2bd6 55%,#d80000 110%);
+      --sh:0 4px 18px rgba(10,30,120,.08);
+      --fh:"Space Grotesk",sans-serif;--fb:"Inter",sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--fb);background:var(--bg);color:var(--ink);min-height:100vh}
+    button{font-family:var(--fb)}
+    .topbar{
+      position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:14px;
+      background:rgba(255,255,255,.85);backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--line);padding:12px 22px;
+    }
+    .topbar .brand{font-family:var(--fh);font-weight:700;font-size:16px;display:flex;align-items:center;gap:10px}
+    .topbar .brand .dot{width:26px;height:26px;border-radius:8px;background:var(--grad);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800}
+    .topbar .spacer{flex:1}
+    .topbar .who{font-size:12.5px;color:var(--faint)}
+    .btn{
+      border:0;cursor:pointer;border-radius:10px;font-weight:600;font-size:13.5px;
+      padding:10px 18px;transition:filter .15s,transform .15s;display:inline-flex;align-items:center;gap:7px;
+    }
+    .btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
+    .btn.primary{background:var(--navy);color:#fff}
+    .btn.publish{background:var(--green);color:#fff}
+    .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+    .btn.danger{background:rgba(216,0,0,.08);color:var(--red)}
+    .btn.tiny{padding:5px 9px;font-size:12px;border-radius:8px}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .badge{background:#fff;color:var(--green);border-radius:999px;font-size:11.5px;padding:1px 8px;font-weight:800}
+
+    .layout{display:flex;max-width:1280px;margin:0 auto;gap:26px;padding:26px 22px}
+    .side{width:215px;flex:none}
+    .side .tab{
+      display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+      background:transparent;border:0;border-radius:12px;padding:12px 15px;cursor:pointer;
+      font-size:14px;font-weight:600;color:var(--soft);margin-bottom:4px;
+    }
+    .side .tab:hover{background:rgba(10,30,120,.06)}
+    .side .tab.active{background:var(--navy);color:#fff;box-shadow:var(--sh)}
+    .panel{flex:1;min-width:0}
+    .panel h2{font-family:var(--fh);font-size:22px;margin:4px 0 4px;letter-spacing:-.01em}
+    .hint{font-size:13px;color:var(--faint);margin:0 0 20px;line-height:1.6}
+
+    .group{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);margin-bottom:20px;overflow:hidden}
+    .group-h{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(10,30,120,.03)}
+    .group-h h3{font-family:var(--fh);font-size:15px;margin:0;flex:1}
+    .row{display:flex;align-items:center;gap:13px;padding:11px 18px;border-bottom:1px solid var(--line)}
+    .row:last-child{border-bottom:0}
+    .row img.av{width:42px;height:42px;border-radius:50%;object-fit:cover;flex:none;background:#eceefb}
+    .row img.th{width:54px;height:42px;border-radius:8px;object-fit:cover;flex:none;background:#eceefb}
+    .row .info{flex:1;min-width:0}
+    .row .info b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .row .info span{font-size:12.5px;color:var(--faint);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .row .acts{display:flex;gap:5px;flex:none}
+    .add-row{padding:12px 18px}
+
+    .empty{padding:26px;text-align:center;color:var(--faint);font-size:13.5px}
+    .pending{outline:2px dashed rgba(12,122,67,.5);outline-offset:-2px}
+
+    /* modal */
+    .overlay{position:fixed;inset:0;background:rgba(8,12,32,.5);backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+    .modal{background:#fff;border-radius:18px;width:min(520px,100%);max-height:90vh;overflow:auto;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+    .modal h3{font-family:var(--fh);margin:0 0 18px;font-size:18px}
+    .field{margin-bottom:15px}
+    .field label{display:block;font-size:12.5px;font-weight:650;margin-bottom:6px;color:var(--soft)}
+    .field input[type=text],.field input[type=url],.field textarea,.field select{
+      width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 13px;
+      font-size:14px;font-family:var(--fb);color:var(--ink);background:#fbfbfe;outline:none;
+    }
+    .field input:focus,.field textarea:focus{border-color:var(--navy)}
+    .field textarea{min-height:74px;resize:vertical}
+    .field .help{font-size:11.5px;color:var(--faint);margin-top:5px;line-height:1.5}
+    .field input[type=file]{font-size:13px}
+    .field.check{display:flex;align-items:center;gap:9px}
+    .field.check label{margin:0}
+    .modal .m-acts{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+
+    /* toast */
+    #toast{
+      position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+      background:var(--ink);color:#fff;border-radius:12px;padding:13px 22px;font-size:14px;
+      z-index:300;transition:transform .3s ease;max-width:90vw;box-shadow:0 12px 40px rgba(0,0,0,.3);
+    }
+    #toast.show{transform:translateX(-50%) translateY(0)}
+    #toast.err{background:var(--red)}
+
+    /* login */
+    .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+      background:radial-gradient(800px 500px at 15% 0%,rgba(10,30,120,.10),transparent 60%),
+                 radial-gradient(700px 500px at 90% 15%,rgba(216,0,0,.07),transparent 60%),var(--bg)}
+    .login{background:#fff;border-radius:22px;box-shadow:0 24px 70px rgba(10,30,120,.16);width:min(560px,100%);padding:38px}
+    .login h1{font-family:var(--fh);font-size:24px;margin:0 0 8px}
+    .login .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .login p{font-size:14px;color:var(--soft);line-height:1.65}
+    .login input[type=password]{
+      width:100%;border:1.5px solid var(--line);border-radius:12px;padding:13px 15px;font-size:14px;
+      font-family:ui-monospace,monospace;outline:none;margin:10px 0 12px;
+    }
+    .login input[type=password]:focus{border-color:var(--navy)}
+    .login details{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:14px 18px;font-size:13.5px}
+    .login details summary{cursor:pointer;font-weight:650;color:var(--navy)}
+    .login details ol{padding-left:20px;line-height:1.8;color:var(--soft)}
+    .login details code{background:rgba(10,30,120,.07);border-radius:5px;padding:1px 6px;font-size:12px}
+    .remember{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--soft);margin-bottom:16px}
+    .login .err-msg{color:var(--red);font-size:13px;margin-top:10px;display:none}
+
+    .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.7s linear infinite}
+    @keyframes sp{to{transform:rotate(360deg)}}
+    @media(max-width:760px){
+      .layout{flex-direction:column}
+      .side{width:100%;display:flex;overflow-x:auto;gap:6px}
+      .side .tab{width:auto;white-space:nowrap}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======================= LOGIN ======================= -->
+<div id="login-screen" class="login-wrap">
+  <div class="login">
+    <h1><span class="grad">Site Manager</span> 🔬</h1>
+    <p>Manage the team, publications, tools, links and lab photos of <b>molhemat.org</b> — changes are saved straight to the website, no coding needed.</p>
+    <label style="font-size:12.5px;font-weight:650;color:var(--soft)">GitHub access token</label>
+    <input type="password" id="token-input" placeholder="github_pat_…" autocomplete="off">
+    <label class="remember"><input type="checkbox" id="remember" checked> Remember on this device</label>
+    <button class="btn primary" id="connect-btn" style="width:100%;justify-content:center;padding:13px">Connect</button>
+    <div class="err-msg" id="login-err"></div>
+    <details>
+      <summary>How do I get a token? (one-time setup, 2 minutes)</summary>
+      <ol>
+        <li>Sign in to GitHub as an account with write access to <code>patkarlab/molhemat.github.io</code>.</li>
+        <li>Go to <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li>Name it e.g. <code>molhemat site manager</code>, set a long expiry.</li>
+        <li>Under <b>Repository access</b> choose <b>Only select repositories</b> → <code>patkarlab/molhemat.github.io</code>.</li>
+        <li>Under <b>Permissions → Repository permissions</b> set <b>Contents</b> to <b>Read and write</b>.</li>
+        <li>Click <b>Generate token</b>, copy it, and paste it above.</li>
+      </ol>
+      <p style="margin:6px 0 0">The token never leaves your browser — it talks directly to GitHub.</p>
+    </details>
+  </div>
+</div>
+
+<!-- ======================= APP ======================= -->
+<div id="app" style="display:none">
+  <div class="topbar">
+    <div class="brand"><span class="dot">M</span> Site Manager</div>
+    <span class="who" id="who"></span>
+    <div class="spacer"></div>
+    <button class="btn ghost" id="reload-btn" title="Discard unsaved edits and reload from GitHub">↻ Reload</button>
+    <button class="btn publish" id="publish-btn" disabled>Publish changes <span class="badge" id="pending-n">0</span></button>
+    <button class="btn ghost" id="logout-btn">Sign out</button>
+  </div>
+  <div class="layout">
+    <aside class="side">
+      <button class="tab active" data-tab="team">👥 Team</button>
+      <button class="tab" data-tab="pubs">📄 Publications</button>
+      <button class="tab" data-tab="tools">🛠️ Tools &amp; Links</button>
+      <button class="tab" data-tab="social">📷 Lab Photos</button>
+    </aside>
+    <main class="panel" id="panel"><div class="empty">Loading…</div></main>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+/* ============ config ============ */
+const REPO = "patkarlab/molhemat.github.io";
+const BRANCH = "main";
+const FILES = { team:"data/team.json", pubs:"data/publications.json", tools:"data/tools.json", social:"data/social.json" };
+const FOLDERS = { team:"photos/teams", pubs:"photos/publications", social:"photos/social" };
+
+/* ============ state ============ */
+let token = "";
+let store = {};          // tab -> parsed JSON
+let shas = {};           // path -> sha
+let uploads = [];        // {path, b64, previewUrl}
+let dirty = new Set();   // tabs with unsaved JSON edits
+let activeTab = "team";
+
+/* ============ helpers ============ */
+const $ = (s, r) => (r || document).querySelector(s);
+const esc = s => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+
+function toast(msg, isErr) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.className = isErr ? "err show" : "show";
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove("show"), isErr ? 6000 : 3200);
+}
+
+function b64encodeUtf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000)
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function b64decodeUtf8(b64) {
+  const bin = atob(b64.replace(/\n/g, ""));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+function fileToB64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => {
+      const bytes = new Uint8Array(r.result);
+      let bin = "";
+      for (let i = 0; i < bytes.length; i += 0x8000)
+        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      res(btoa(bin));
+    };
+    r.onerror = rej;
+    r.readAsArrayBuffer(file);
+  });
+}
+function slugName(name) {
+  const dot = name.lastIndexOf(".");
+  const ext = dot > -1 ? name.slice(dot).toLowerCase() : "";
+  const base = (dot > -1 ? name.slice(0, dot) : name)
+    .toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g, "").trim().replace(/[\s_-]+/g, "_");
+  return (base || "file") + ext;
+}
+
+/* ============ GitHub API ============ */
+async function gh(path, opts = {}) {
+  const res = await fetch(`https://api.github.com/${path}`, {
+    ...opts,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Accept": "application/vnd.github+json",
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(opts.headers || {}),
+    },
+  });
+  if (!res.ok && res.status !== 404) {
+    let msg = `GitHub error ${res.status}`;
+    try { msg += `: ${(await res.json()).message}`; } catch (_) {}
+    throw new Error(msg);
+  }
+  return res;
+}
+const encPath = p => p.split("/").map(encodeURIComponent).join("/");
+
+async function getFileSha(path) {
+  const res = await gh(`repos/${REPO}/contents/${encPath(path)}?ref=${BRANCH}`);
+  if (res.status === 404) return null;
+  return (await res.json()).sha;
+}
+async function loadJson(tab) {
+  const path = FILES[tab];
+  const res = await gh(`repos/${REPO}/contents/${encPath(path)}?ref=${BRANCH}`);
+  if (res.status === 404) throw new Error(`${path} not found on branch ${BRANCH}`);
+  const j = await res.json();
+  shas[path] = j.sha;
+  store[tab] = JSON.parse(b64decodeUtf8(j.content));
+}
+async function putFile(path, b64, message) {
+  const body = { message, content: b64, branch: BRANCH };
+  const knownSha = shas[path] ?? await getFileSha(path);
+  if (knownSha) body.sha = knownSha;
+  let res = await fetch(`https://api.github.com/repos/${REPO}/contents/${encPath(path)}`, {
+    method: "PUT",
+    headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+    body: JSON.stringify(body),
+  });
+  if (res.status === 409 || res.status === 422) {
+    // stale sha — refetch and retry once
+    delete shas[path];
+    const fresh = await getFileSha(path);
+    if (fresh) body.sha = fresh; else delete body.sha;
+    res = await fetch(`https://api.github.com/repos/${REPO}/contents/${encPath(path)}`, {
+      method: "PUT",
+      headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" },
+      body: JSON.stringify(body),
+    });
+  }
+  if (!res.ok) {
+    let msg = `Failed to save ${path} (${res.status})`;
+    try { msg += `: ${(await res.json()).message}`; } catch (_) {}
+    throw new Error(msg);
+  }
+  const j = await res.json();
+  shas[path] = j.content.sha;
+}
+
+/* ============ pending changes ============ */
+function markDirty(tab) {
+  dirty.add(tab);
+  updatePending();
+  render();
+}
+function updatePending() {
+  const n = dirty.size + uploads.length;
+  $("#pending-n").textContent = n;
+  $("#publish-btn").disabled = n === 0;
+}
+async function stageUpload(file, folder) {
+  const path = `${folder}/${slugName(file.name)}`;
+  const b64 = await fileToB64(file);
+  const existing = uploads.findIndex(u => u.path === path);
+  if (existing > -1) uploads.splice(existing, 1);
+  uploads.push({ path, b64, previewUrl: URL.createObjectURL(file) });
+  updatePending();
+  return path;
+}
+function previewSrc(path) {
+  const u = uploads.find(u => u.path === path);
+  return u ? u.previewUrl : path;
+}
+
+/* ============ generic modal form ============ */
+function openForm(title, fields, initial, onSave) {
+  const root = $("#modal-root");
+  root.innerHTML = `
+    <div class="overlay">
+      <form class="modal" id="mform">
+        <h3>${esc(title)}</h3>
+        ${fields.map(f => {
+          const val = initial?.[f.key] ?? "";
+          if (f.type === "file") return `
+            <div class="field"><label>${esc(f.label)}</label>
+              <input type="file" name="${f.key}" accept="${f.accept || ""}">
+              ${val ? `<div class="help">Current: ${esc(val)} — leave empty to keep it.</div>` : (f.help ? `<div class="help">${esc(f.help)}</div>` : "")}
+            </div>`;
+          if (f.type === "textarea") return `
+            <div class="field"><label>${esc(f.label)}</label>
+              <textarea name="${f.key}" placeholder="${esc(f.placeholder || "")}">${esc(val)}</textarea>
+              ${f.help ? `<div class="help">${esc(f.help)}</div>` : ""}
+            </div>`;
+          if (f.type === "checkbox") return `
+            <div class="field check">
+              <input type="checkbox" name="${f.key}" id="cb_${f.key}" ${val ? "checked" : ""}>
+              <label for="cb_${f.key}">${esc(f.label)}</label>
+            </div>`;
+          if (f.type === "select") return `
+            <div class="field"><label>${esc(f.label)}</label>
+              <select name="${f.key}">${f.options.map(o => `<option value="${esc(o)}" ${o === val ? "selected" : ""}>${esc(o)}</option>`).join("")}</select>
+            </div>`;
+          return `
+            <div class="field"><label>${esc(f.label)}${f.required ? " *" : ""}</label>
+              <input type="text" name="${f.key}" value="${esc(val)}" placeholder="${esc(f.placeholder || "")}" ${f.required ? "required" : ""}>
+              ${f.help ? `<div class="help">${esc(f.help)}</div>` : ""}
+            </div>`;
+        }).join("")}
+        <div class="m-acts">
+          <button type="button" class="btn ghost" id="m-cancel">Cancel</button>
+          <button type="submit" class="btn primary" id="m-save">Save</button>
+        </div>
+      </form>
+    </div>`;
+  const close = () => { root.innerHTML = ""; };
+  $("#m-cancel").onclick = close;
+  $(".overlay").addEventListener("click", e => { if (e.target.classList.contains("overlay")) close(); });
+  $("#mform").onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = $("#m-save");
+    btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Saving`;
+    try {
+      const vals = { ...(initial || {}) };
+      for (const f of fields) {
+        const el = e.target.elements[f.key];
+        if (f.type === "file") {
+          if (el.files[0]) vals[f.key] = { __file: el.files[0] };
+        } else if (f.type === "checkbox") vals[f.key] = el.checked;
+        else vals[f.key] = el.value.trim();
+      }
+      await onSave(vals);
+      close();
+    } catch (err) {
+      toast(err.message, true);
+      btn.disabled = false; btn.textContent = "Save";
+    }
+  };
+}
+
+/* ============ renderers ============ */
+function render() {
+  const p = $("#panel");
+  if (!store[activeTab]) { p.innerHTML = `<div class="empty">Loading…</div>`; return; }
+  if (activeTab === "team") renderTeam(p);
+  else if (activeTab === "pubs") renderPubs(p);
+  else if (activeTab === "tools") renderTools(p);
+  else renderSocial(p);
+}
+
+const upDownDel = (tag, si, i, len) => `
+  <button class="btn tiny ghost" data-act="${tag}-up" data-s="${si}" data-i="${i}" ${i === 0 ? "disabled" : ""} title="Move up">↑</button>
+  <button class="btn tiny ghost" data-act="${tag}-down" data-s="${si}" data-i="${i}" ${i === len - 1 ? "disabled" : ""} title="Move down">↓</button>
+  <button class="btn tiny ghost" data-act="${tag}-edit" data-s="${si}" data-i="${i}" title="Edit">✎</button>
+  <button class="btn tiny danger" data-act="${tag}-del" data-s="${si}" data-i="${i}" title="Remove">✕</button>`;
+
+/* ----- TEAM ----- */
+function renderTeam(p) {
+  const d = store.team;
+  p.innerHTML = `
+    <h2>Team</h2>
+    <p class="hint">Add, edit, reorder or remove members. Changes go live on the website after you press <b>Publish changes</b>.</p>
+    ${d.sections.map((sec, si) => `
+      <div class="group">
+        <div class="group-h">
+          <h3>${esc(sec.title)}</h3>
+          <button class="btn tiny ghost" data-act="sec-rename" data-s="${si}">Rename</button>
+          <button class="btn tiny ghost" data-act="sec-up" data-s="${si}" ${si === 0 ? "disabled" : ""}>↑</button>
+          <button class="btn tiny ghost" data-act="sec-down" data-s="${si}" ${si === d.sections.length - 1 ? "disabled" : ""}>↓</button>
+          <button class="btn tiny danger" data-act="sec-del" data-s="${si}" ${sec.members.length ? "disabled" : ""} title="${sec.members.length ? "Remove all members first" : "Delete section"}">✕</button>
+        </div>
+        ${sec.members.map((m, i) => `
+          <div class="row${uploads.some(u => u.path === m.photo) ? " pending" : ""}">
+            <img class="av" src="${esc(previewSrc(m.photo))}" onerror="this.style.visibility='hidden'">
+            <div class="info"><b>${esc(m.name)}</b><span>${esc([m.credentials, m.role].filter(Boolean).join(" · "))}${m.cv ? " · has CV" : ""}</span></div>
+            <div class="acts">${upDownDel("mem", si, i, sec.members.length)}</div>
+          </div>`).join("") || `<div class="empty">No members in this section.</div>`}
+        <div class="add-row"><button class="btn ghost" data-act="mem-add" data-s="${si}">＋ Add member</button></div>
+      </div>`).join("")}
+    <button class="btn ghost" data-act="sec-add">＋ Add a new section</button>`;
+}
+
+function memberForm(si, i) {
+  const sec = store.team.sections[si];
+  const m = i != null ? sec.members[i] : null;
+  openForm(m ? `Edit ${m.name}` : `Add member — ${sec.title}`, [
+    { key: "name", label: "Full name", required: true, placeholder: "e.g. Dr. Jane Doe" },
+    { key: "credentials", label: "Credentials (optional)", placeholder: "e.g. MD, PhD" },
+    { key: "role", label: "Role / designation", placeholder: "e.g. Research Fellow" },
+    { key: "photoFile", label: "Photo (JPG/PNG)", type: "file", accept: "image/*", help: "Square photos look best." },
+    { key: "cvFile", label: "CV (PDF, optional)", type: "file", accept: "application/pdf" },
+    { key: "featured", label: "Featured (larger card, for PIs)", type: "checkbox" },
+  ], m ? { ...m, photoFile: m.photo, cvFile: m.cv } : null, async (v) => {
+    const out = { name: v.name, role: v.role };
+    if (v.credentials) out.credentials = v.credentials;
+    if (v.featured) out.featured = true;
+    out.photo = v.photoFile?.__file ? await stageUpload(v.photoFile.__file, FOLDERS.team) : (m?.photo || "");
+    if (!out.photo) throw new Error("Please choose a photo.");
+    if (v.cvFile?.__file) out.cv = await stageUpload(v.cvFile.__file, FOLDERS.team);
+    else if (m?.cv) out.cv = m.cv;
+    if (i != null) sec.members[i] = out; else sec.members.push(out);
+    markDirty("team");
+    toast(i != null ? "Member updated — remember to publish." : "Member added — remember to publish.");
+  });
+}
+
+/* ----- PUBLICATIONS ----- */
+function renderPubs(p) {
+  const d = store.pubs;
+  p.innerHTML = `
+    <h2>Publications</h2>
+    <p class="hint">Each article needs a caption, a cover image, and a link (a PubMed/journal URL or an uploaded PDF).</p>
+    ${d.sections.map((sec, si) => `
+      <div class="group">
+        <div class="group-h"><h3>${esc(sec.title)}</h3>
+          <button class="btn tiny ghost" data-act="psec-rename" data-s="${si}">Rename</button>
+        </div>
+        ${sec.items.map((it, i) => `
+          <div class="row${uploads.some(u => u.path === it.image) ? " pending" : ""}">
+            <img class="th" src="${esc(previewSrc(it.image))}" onerror="this.style.visibility='hidden'">
+            <div class="info"><b>${esc(it.caption)}</b><span>${esc(it.year || "")} · ${esc(it.link)}</span></div>
+            <div class="acts">${upDownDel("pub", si, i, sec.items.length)}</div>
+          </div>`).join("") || `<div class="empty">No articles yet.</div>`}
+        <div class="add-row"><button class="btn ghost" data-act="pub-add" data-s="${si}">＋ Add article</button></div>
+      </div>`).join("")}`;
+}
+
+function pubForm(si, i) {
+  const sec = store.pubs.sections[si];
+  const it = i != null ? sec.items[i] : null;
+  openForm(it ? "Edit article" : `Add article — ${sec.title}`, [
+    { key: "caption", label: "Caption", required: true, placeholder: "e.g. Patkar et al., Leukemia" },
+    { key: "year", label: "Year", placeholder: "e.g. 2026" },
+    { key: "imageFile", label: "Cover image (JPG/PNG)", type: "file", accept: "image/*", help: "A screenshot of the paper's first page works well." },
+    { key: "link", label: "Link URL (PubMed / journal)", placeholder: "https://pubmed.ncbi.nlm.nih.gov/…" },
+    { key: "pdfFile", label: "…or upload the PDF instead", type: "file", accept: "application/pdf", help: "If you upload a PDF, it overrides the URL above." },
+  ], it ? { ...it, imageFile: it.image, pdfFile: "" } : null, async (v) => {
+    const out = { caption: v.caption, year: v.year };
+    out.image = v.imageFile?.__file ? await stageUpload(v.imageFile.__file, FOLDERS.pubs) : (it?.image || "");
+    if (!out.image) throw new Error("Please choose a cover image.");
+    if (v.pdfFile?.__file) out.link = await stageUpload(v.pdfFile.__file, FOLDERS.pubs);
+    else out.link = v.link || it?.link || "";
+    if (!out.link) throw new Error("Please provide a link URL or upload a PDF.");
+    if (i != null) sec.items[i] = out; else sec.items.unshift(out);
+    markDirty("pubs");
+    toast("Article saved — remember to publish.");
+  });
+}
+
+/* ----- TOOLS & LINKS ----- */
+function renderTools(p) {
+  const d = store.tools;
+  p.innerHTML = `
+    <h2>Tools &amp; Links</h2>
+    <p class="hint">Web tools shown on the Tools page, plus the "Useful Links" list.</p>
+    <div class="group">
+      <div class="group-h"><h3>Research tools</h3></div>
+      ${d.tools.map((t, i) => `
+        <div class="row">
+          <div style="font-size:24px;flex:none">${esc(t.icon || "🧰")}</div>
+          <div class="info"><b>${esc(t.title)}</b><span>${esc(t.link)}</span></div>
+          <div class="acts">${upDownDel("tool", 0, i, d.tools.length)}</div>
+        </div>`).join("") || `<div class="empty">No tools yet.</div>`}
+      <div class="add-row"><button class="btn ghost" data-act="tool-add">＋ Add tool</button></div>
+    </div>
+    <div class="group">
+      <div class="group-h"><h3>Useful links</h3></div>
+      ${d.links.map((l, i) => `
+        <div class="row">
+          <div style="font-size:18px;color:var(--red);flex:none">↗</div>
+          <div class="info"><b>${esc(l.title)}</b><span>${esc(l.url)}</span></div>
+          <div class="acts">${upDownDel("link", 0, i, d.links.length)}</div>
+        </div>`).join("") || `<div class="empty">No links yet.</div>`}
+      <div class="add-row"><button class="btn ghost" data-act="link-add">＋ Add link</button></div>
+    </div>`;
+}
+
+function toolForm(i) {
+  const t = i != null ? store.tools.tools[i] : null;
+  openForm(t ? "Edit tool" : "Add tool", [
+    { key: "icon", label: "Emoji icon", placeholder: "🧬" },
+    { key: "title", label: "Title", required: true },
+    { key: "description", label: "Description", type: "textarea" },
+    { key: "tagsCsv", label: "Tags (comma-separated)", placeholder: "Web App, Visualization" },
+    { key: "link", label: "Link (page or URL)", required: true, placeholder: "mytool.html or https://…" },
+  ], t ? { ...t, tagsCsv: (t.tags || []).join(", ") } : null, async (v) => {
+    const out = { icon: v.icon || "🧰", title: v.title, description: v.description, link: v.link,
+      tags: v.tagsCsv ? v.tagsCsv.split(",").map(s => s.trim()).filter(Boolean) : [] };
+    if (i != null) store.tools.tools[i] = out; else store.tools.tools.push(out);
+    markDirty("tools");
+  });
+}
+function linkForm(i) {
+  const l = i != null ? store.tools.links[i] : null;
+  openForm(l ? "Edit link" : "Add link", [
+    { key: "title", label: "Title", required: true },
+    { key: "url", label: "URL", required: true, placeholder: "https://…" },
+    { key: "description", label: "Description (optional)", type: "textarea" },
+  ], l, async (v) => {
+    const out = { title: v.title, url: v.url, description: v.description };
+    if (i != null) store.tools.links[i] = out; else store.tools.links.push(out);
+    markDirty("tools");
+  });
+}
+
+/* ----- SOCIAL PHOTOS ----- */
+function renderSocial(p) {
+  const d = store.social;
+  p.innerHTML = `
+    <h2>Lab Photos (Social page)</h2>
+    <p class="hint">Upload photos of lab life — celebrations, conferences, retreats. They appear in the gallery on the Social page, newest first.</p>
+    <div class="group">
+      <div class="group-h"><h3>Gallery (${d.photos.length})</h3></div>
+      ${d.photos.map((ph, i) => `
+        <div class="row${uploads.some(u => u.path === ph.image) ? " pending" : ""}">
+          <img class="th" src="${esc(previewSrc(ph.image))}" onerror="this.style.visibility='hidden'">
+          <div class="info"><b>${esc(ph.caption || "(no caption)")}</b><span>${esc(ph.date || "")}</span></div>
+          <div class="acts">${upDownDel("shot", 0, i, d.photos.length)}</div>
+        </div>`).join("") || `<div class="empty">No photos yet — add your first one below!</div>`}
+      <div class="add-row"><button class="btn primary" data-act="shot-add">＋ Add photos</button></div>
+    </div>`;
+}
+
+function shotForm(i) {
+  const ph = i != null ? store.social.photos[i] : null;
+  openForm(ph ? "Edit photo" : "Add photos", [
+    ...(ph ? [] : [{ key: "files", label: "Photo(s) — you can select several", type: "file", accept: "image/*" }]),
+    { key: "caption", label: "Caption", placeholder: "e.g. Lab retreat at Lonavala" },
+    { key: "date", label: "Date (optional)", placeholder: "e.g. June 2026" },
+  ], ph, async (v) => {
+    if (ph) {
+      ph.caption = v.caption; ph.date = v.date;
+    } else {
+      const input = $("#mform")?.elements?.files;
+      const files = input ? Array.from(input.files) : [];
+      if (!files.length) throw new Error("Please choose at least one photo.");
+      for (const f of files) {
+        const path = await stageUpload(f, FOLDERS.social);
+        store.social.photos.unshift({ image: path, caption: v.caption, date: v.date });
+      }
+    }
+    markDirty("social");
+    toast("Photo(s) staged — remember to publish.");
+  });
+}
+// allow multiple files on the social file input
+const _openForm = openForm;
+
+/* ============ actions (event delegation) ============ */
+$("#panel").addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-act]");
+  if (!btn) return;
+  const act = btn.dataset.act, si = +btn.dataset.s || 0, i = +btn.dataset.i || 0;
+  const move = (arr, from, delta) => { const [x] = arr.splice(from, 1); arr.splice(from + delta, 0, x); };
+
+  const T = store.team, P = store.pubs, L = store.tools, S = store.social;
+  switch (act) {
+    case "mem-add": return memberForm(si, null);
+    case "mem-edit": return memberForm(si, i);
+    case "mem-del":
+      if (confirm(`Remove ${T.sections[si].members[i].name} from the website?`)) { T.sections[si].members.splice(i, 1); markDirty("team"); }
+      return;
+    case "mem-up": move(T.sections[si].members, i, -1); return markDirty("team");
+    case "mem-down": move(T.sections[si].members, i, 1); return markDirty("team");
+    case "sec-up": move(T.sections, si, -1); return markDirty("team");
+    case "sec-down": move(T.sections, si, 1); return markDirty("team");
+    case "sec-del":
+      if (confirm(`Delete empty section "${T.sections[si].title}"?`)) { T.sections.splice(si, 1); markDirty("team"); }
+      return;
+    case "sec-rename": {
+      const name = prompt("Section name:", T.sections[si].title);
+      if (name) { T.sections[si].title = name.trim(); markDirty("team"); }
+      return;
+    }
+    case "sec-add": {
+      const name = prompt("New section name (e.g. Alumni):");
+      if (name) { T.sections.push({ title: name.trim(), members: [] }); markDirty("team"); }
+      return;
+    }
+    case "pub-add": return pubForm(si, null);
+    case "pub-edit": return pubForm(si, i);
+    case "pub-del":
+      if (confirm(`Remove "${P.sections[si].items[i].caption}"?`)) { P.sections[si].items.splice(i, 1); markDirty("pubs"); }
+      return;
+    case "pub-up": move(P.sections[si].items, i, -1); return markDirty("pubs");
+    case "pub-down": move(P.sections[si].items, i, 1); return markDirty("pubs");
+    case "psec-rename": {
+      const name = prompt("Section name:", P.sections[si].title);
+      if (name) { P.sections[si].title = name.trim(); markDirty("pubs"); }
+      return;
+    }
+    case "tool-add": return toolForm(null);
+    case "tool-edit": return toolForm(i);
+    case "tool-del":
+      if (confirm(`Remove tool "${L.tools[i].title}"?`)) { L.tools.splice(i, 1); markDirty("tools"); }
+      return;
+    case "tool-up": move(L.tools, i, -1); return markDirty("tools");
+    case "tool-down": move(L.tools, i, 1); return markDirty("tools");
+    case "link-add": return linkForm(null);
+    case "link-edit": return linkForm(i);
+    case "link-del":
+      if (confirm(`Remove link "${L.links[i].title}"?`)) { L.links.splice(i, 1); markDirty("tools"); }
+      return;
+    case "link-up": move(L.links, i, -1); return markDirty("tools");
+    case "link-down": move(L.links, i, 1); return markDirty("tools");
+    case "shot-add": return shotForm(null);
+    case "shot-edit": return shotForm(i);
+    case "shot-del":
+      if (confirm("Remove this photo from the gallery?")) { S.photos.splice(i, 1); markDirty("social"); }
+      return;
+    case "shot-up": move(S.photos, i, -1); return markDirty("social");
+    case "shot-down": move(S.photos, i, 1); return markDirty("social");
+  }
+});
+
+// make the multi-file input actually multiple
+new MutationObserver(() => {
+  const f = document.querySelector('#mform input[name="files"]');
+  if (f) f.multiple = true;
+}).observe(document.getElementById("modal-root"), { childList: true, subtree: true });
+
+/* ============ tabs / topbar ============ */
+document.querySelectorAll(".side .tab").forEach(b => b.addEventListener("click", () => {
+  document.querySelectorAll(".side .tab").forEach(x => x.classList.remove("active"));
+  b.classList.add("active");
+  activeTab = b.dataset.tab;
+  render();
+}));
+
+$("#publish-btn").addEventListener("click", async () => {
+  const btn = $("#publish-btn");
+  btn.disabled = true;
+  const orig = btn.innerHTML;
+  btn.innerHTML = `<span class="spin"></span> Publishing…`;
+  try {
+    for (const u of uploads) {
+      btn.innerHTML = `<span class="spin"></span> Uploading ${u.path.split("/").pop()}…`;
+      await putFile(u.path, u.b64, `Upload ${u.path} via site manager`);
+    }
+    uploads = [];
+    for (const tab of [...dirty]) {
+      btn.innerHTML = `<span class="spin"></span> Saving ${FILES[tab]}…`;
+      await putFile(FILES[tab], b64encodeUtf8(JSON.stringify(store[tab], null, 2)), `Update ${FILES[tab]} via site manager`);
+      dirty.delete(tab);
+    }
+    updatePending();
+    toast("✅ Published! The live site updates within a minute or two.");
+  } catch (err) {
+    toast(err.message, true);
+  } finally {
+    btn.innerHTML = orig;
+    updatePending();
+    render();
+  }
+});
+
+$("#reload-btn").addEventListener("click", async () => {
+  if ((dirty.size || uploads.length) && !confirm("Discard unsaved changes and reload from GitHub?")) return;
+  uploads = []; dirty.clear(); updatePending();
+  $("#panel").innerHTML = `<div class="empty">Loading…</div>`;
+  try {
+    await Promise.all(Object.keys(FILES).map(loadJson));
+    render();
+    toast("Reloaded latest content.");
+  } catch (err) { toast(err.message, true); }
+});
+
+$("#logout-btn").addEventListener("click", () => {
+  localStorage.removeItem("molhemat_admin_token");
+  location.reload();
+});
+
+/* ============ login ============ */
+async function connect(tok) {
+  token = tok;
+  const me = await gh("user");
+  if (me.status === 404) throw new Error("Token rejected.");
+  const user = await me.json();
+  const repo = await gh(`repos/${REPO}`);
+  if (repo.status === 404) throw new Error(`This token cannot access ${REPO}. Check its repository access and Contents permission.`);
+  $("#who").textContent = `${REPO} · signed in as ${user.login}`;
+  await Promise.all(Object.keys(FILES).map(loadJson));
+  $("#login-screen").style.display = "none";
+  $("#app").style.display = "block";
+  render();
+}
+
+$("#connect-btn").addEventListener("click", async () => {
+  const tok = $("#token-input").value.trim();
+  const errEl = $("#login-err");
+  errEl.style.display = "none";
+  if (!tok) { errEl.textContent = "Please paste a token."; errEl.style.display = "block"; return; }
+  const btn = $("#connect-btn");
+  btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Connecting…`;
+  try {
+    await connect(tok);
+    if ($("#remember").checked) localStorage.setItem("molhemat_admin_token", tok);
+  } catch (err) {
+    errEl.textContent = err.message;
+    errEl.style.display = "block";
+    btn.disabled = false; btn.textContent = "Connect";
+  }
+});
+$("#token-input").addEventListener("keydown", e => { if (e.key === "Enter") $("#connect-btn").click(); });
+
+window.addEventListener("beforeunload", (e) => {
+  if (dirty.size || uploads.length) { e.preventDefault(); e.returnValue = ""; }
+});
+
+// auto sign-in
+(async () => {
+  const saved = localStorage.getItem("molhemat_admin_token");
+  if (!saved) return;
+  $("#connect-btn").disabled = true;
+  $("#connect-btn").innerHTML = `<span class="spin"></span> Signing in…`;
+  try { await connect(saved); }
+  catch (_) {
+    localStorage.removeItem("molhemat_admin_token");
+    $("#connect-btn").disabled = false;
+    $("#connect-btn").textContent = "Connect";
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "tools": [
+    {
+      "icon": "🧬",
+      "title": "Gene Coordinate Extractor",
+      "description": "Retrieve exonic and intronic coordinates for human genes using MANE Select transcripts. Supports hg38 and hg19 assemblies with BED file export.",
+      "tags": ["Client-side", "UCSC API", "BED Export"],
+      "link": "gene_coordinate_extractor.html"
+    },
+    {
+      "icon": "📊",
+      "title": "EasySurv",
+      "description": "Code-free survival analysis platform. Kaplan-Meier plots, Cox regression, competing risks, biomarker optimization, and AI-powered result narration.",
+      "tags": ["Web App", "Survival Analysis", "Publication-Ready"],
+      "link": "easysurv.html"
+    },
+    {
+      "icon": "🧪",
+      "title": "Mutation Waterfall Plot Generator",
+      "description": "Generate publication-ready oncoplot / waterfall plots from mutation data. Visualize mutation landscapes across patient cohorts with customizable styling.",
+      "tags": ["Web App", "Oncoplots", "Visualization"],
+      "link": "oncoplot.html"
+    }
+  ],
+  "links": [
+    { "title": "PubMed — Complete Publication List", "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Patkar+Nikhil&sort=date", "description": "A complete and updated list of our papers on PubMed." },
+    { "title": "Patkar Lab on GitHub", "url": "https://github.com/patkarlab", "description": "Open-source code, pipelines and tools developed by the group." },
+    { "title": "ACTREC", "url": "https://actrec.gov.in/", "description": "Advanced Centre for Treatment, Research and Education in Cancer." },
+    { "title": "Tata Memorial Centre", "url": "https://tmc.gov.in/", "description": "Our parent institution in Mumbai, India." }
+  ]
+}
