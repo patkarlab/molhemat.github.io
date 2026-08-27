@@ -7,9 +7,9 @@
           "name": "Prof. Nikhil Patkar",
           "role": "Principal Investigator",
           "credentials": "MD, DNB",
+          "featured": true,
           "photo": "photos/teams/nikhil_patkar.jpg",
-          "cv": "photos/teams/nikhil_patkar_cv.pdf",
-          "featured": true
+          "cv": "photos/teams/cv_2026_patkar.pdf"
         }
       ]
     },
@@ -89,11 +89,6 @@
           "name": "Vaibhav Gawde",
           "role": "Bioinformatician",
           "photo": "photos/teams/vaibhav_gawde.png"
-        },
-        {
-          "name": "Moin",
-          "role": "Trainee",
-          "photo": "photos/teams/moin.jpeg"
         }
       ]
     },
@@ -129,11 +124,6 @@
           "name": "Ayush Sheth",
           "role": "Research Fellow",
           "photo": "photos/teams/ayush_sheth.jpg"
-        },
-        {
-          "name": "Bhadra Muralidharan",
-          "role": "Research Fellow",
-          "photo": "photos/teams/bhadra_muralidharan.jpeg"
         },
         {
           "name": "Bhavya Shah",
